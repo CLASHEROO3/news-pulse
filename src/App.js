@@ -8,19 +8,10 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Check if first time visitor
   useEffect(() => {
     const hasVisited = localStorage.getItem('newspulse_visited');
-    if (!hasVisited) {
-      setShowOnboarding(true);
-    }
+    if (!hasVisited) setShowOnboarding(true);
   }, []);
-
-  // Update Tab Title
-  useEffect(() => {
-    const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-    document.title = `NewsPulse | ${cap(category)} News`;
-  }, [category]);
 
   const handleCustomization = (selectedCat) => {
     setCategory(selectedCat);
@@ -30,13 +21,12 @@ function App() {
 
   return (
     <div className="App">
-      {/* Onboarding Modal */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="Logo" style={{height: '50px'}} />
+            <img src="/logo.png" alt="Logo" style={{height: '60px', width:'auto'}} />
             <h2>Welcome to NewsPulse</h2>
-            <p>What news interests you the most?</p>
+            <p>Pick a topic to personalize your feed</p>
             <div className="onboarding-options">
               {["technology", "business", "sports", "health"].map(cat => (
                 <button key={cat} onClick={() => handleCustomization(cat)} className="cat-btn">
@@ -44,12 +34,11 @@ function App() {
                 </button>
               ))}
             </div>
-            <button className="skip-btn" onClick={() => handleCustomization("general")}>Skip for now</button>
+            <button className="skip-btn" style={{marginTop:'20px', background:'none', border:'none', cursor:'pointer', color:'#64748b', textDecoration:'underline'}} onClick={() => handleCustomization("general")}>Skip for now</button>
           </div>
         </div>
       )}
 
-      {/* Navbar */}
       <nav className="navbar">
         <div className="logo-section">
           <button className="menu-toggle" onClick={() => setIsMenuOpen(true)}>☰</button>
@@ -59,10 +48,9 @@ function App() {
         <div className="date-display">{new Date().toDateString()}</div>
       </nav>
 
-      {/* Sidebar Menu */}
       <div className={`sidebar ${isMenuOpen ? 'open' : ''}`}>
         <button className="close-sidebar" onClick={() => setIsMenuOpen(false)}>×</button>
-        <h3 style={{color: '#c59235', marginBottom: '20px'}}>Categories</h3>
+        <h3 style={{color: '#c59235', marginBottom: '20px', borderBottom:'1px solid #c59235', paddingBottom:'10px'}}>Explore</h3>
         {["general", "technology", "business", "sports", "entertainment", "health"].map((cat) => (
           <button 
             key={cat} 
@@ -74,18 +62,6 @@ function App() {
         ))}
       </div>
 
-      <div className="news-tabs">
-        <button className={`tab-btn ${country === 'in' ? 'active' : ''}`} onClick={() => setCountry('in')}>India News</button>
-        <button className={`tab-btn ${country === 'us' ? 'active' : ''}`} onClick={() => setCountry('us')}>Global News</button>
-      </div>
-
-      <NewsBoard category={category} country={country} />
-
-      <footer className="footer">
-        <p><strong>NewsPulse Aggregator</strong> | Final Year Project</p>
-      </footer>
-    </div>
-  );
-}
-
-export default App;
+      <div className="news-tabs" style={{display:'flex', justifyContent:'center', background:'#fff', borderBottom:'1px solid #e2e8f0'}}>
+        <button className={`tab-btn ${country === 'in' ? 'active' : ''}`} style={{padding:'15px 30px', border:'none', background:'none', fontWeight:'700', cursor:'pointer', borderBottom: country==='in'?'3px solid #c59235':'3px solid transparent', color: country==='in'?'#c59235':'#94a3b8'}} onClick={() => setCountry('in')}>India News</button>
+        <button className={`tab-btn ${country === 'us' ? 'active' : ''}`} style={{padding:'15px 30px', border:'none', background:'none', fontWeight:
