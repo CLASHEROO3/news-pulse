@@ -3,7 +3,6 @@ import './App.css';
 import NewsBoard from './Components/NewsBoard';
 
 function App() {
-  // Now using an array for multiple categories
   const [selectedCats, setSelectedCats] = useState(["general"]);
   const [country, setCountry] = useState("in");
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -33,14 +32,13 @@ function App() {
 
   return (
     <div className="App">
+      {/* 1. Onboarding Modal */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <div className="modal-header">
-              <img src="/logo.png" alt="Logo" className="modal-logo" />
-              <h2>Personalize Your Feed</h2>
-              <p>Select the topics you want to follow. We'll curate a custom feed for you.</p>
-            </div>
+            <img src="/logo.png" alt="Logo" className="modal-logo" />
+            <h2>Personalize Your Feed</h2>
+            <p>Select multiple topics to create your custom news stream.</p>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
                 <button 
@@ -57,31 +55,43 @@ function App() {
         </div>
       )}
 
+      {/* 2. Professional Navbar */}
       <nav className="navbar">
-        <div className="logo-section">
-          <button className="menu-icon" onClick={() => setIsMenuOpen(true)}>☰</button>
-          <img src="/logo.png" alt="Logo" className="nav-logo" />
-          <div className="logo-text">News<span>Pulse</span></div>
+        <div className="nav-left">
+          <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
+          <div className="brand">
+            <img src="/logo.png" alt="NP" className="nav-logo" />
+            <h1 className="logo-text">News<span>Pulse</span></h1>
+          </div>
         </div>
-        <div className="nav-actions">
-          <button className="custom-btn" onClick={() => setShowOnboarding(true)}>⚙ Customize</button>
-          <span className="date-label">{new Date().toDateString()}</span>
+        <div className="nav-right">
+          <button className="customize-btn" onClick={() => setShowOnboarding(true)}>⚙ Customize</button>
+          <span className="nav-date">{new Date().toDateString()}</span>
         </div>
       </nav>
 
-      <div className={`sidebar ${isMenuOpen ? 'open' : ''}`}>
-        <button className="close-sidebar" onClick={() => setIsMenuOpen(false)}>×</button>
-        <h3 className="sidebar-header">Switch Source</h3>
-        <div className="news-tabs-vertical">
+      {/* 3. Hidden Sidebar Drawer */}
+      <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <h3>Switch Region</h3>
+          <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
+        </div>
+        <div className="sidebar-content">
           <button className={country === 'in' ? 'active' : ''} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>India News</button>
           <button className={country === 'us' ? 'active' : ''} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>Global News</button>
         </div>
       </div>
+      {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
 
+      {/* 4. Content */}
+      <div className="active-filters-bar">
+        {selectedCats.map(c => <span key={c} className="tag">#{c}</span>)}
+      </div>
+      
       <NewsBoard selectedCats={selectedCats} country={country} />
       
-      <footer className="footer-professional">
-        <p>© 2024 NewsPulse Aggregator | Powered by Real-time News Engine</p>
+      <footer className="footer-final">
+        <p>© 2024 NewsPulse Aggregator | Bharat Edition</p>
       </footer>
     </div>
   );

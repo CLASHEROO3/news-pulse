@@ -7,60 +7,40 @@ const NewsBoard = ({ selectedCats, country }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMultiNews = async () => {
+    const fetchAll = async () => {
       setLoading(true);
       try {
-        // Fetch from all selected categories at once
         const requests = selectedCats.map(cat => 
           axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${cat}/${country}.json`)
         );
-
         const responses = await Promise.all(requests);
+        let combined = [];
+        responses.forEach(r => combined = [...combined, ...r.data.articles]);
         
-        // Merge all articles into one big list
-        let allArticles = [];
-        responses.forEach(res => {
-          allArticles = [...allArticles, ...res.data.articles];
-        });
+        // Sort by actual time (Newest first)
+        combined.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+        
+        // Remove duplicates
+        const unique = Array.from(new Set(combined.map(a => a.url)))
+                            .map(url => combined.find(a => a.url === url));
 
-        // SORT BY TIME (Newest first)
-        allArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-
-        // Remove duplicates and set
-        const uniqueArticles = Array.from(new Set(allArticles.map(a => a.url)))
-          .map(url => allArticles.find(a => a.url === url));
-
-        setArticles(uniqueArticles.slice(0, 40));
+        setArticles(unique.slice(0, 40));
         setLoading(false);
-      } catch (error) {
-        console.error("API Error", error);
-        setLoading(false);
-      }
+      } catch (e) { setLoading(false); }
     };
-
-    fetchMultiNews();
+    fetchAll();
   }, [selectedCats, country]);
 
   return (
-    <div className="news-grid-wrapper">
-      <div className="active-filters">
-        {selectedCats.map(c => <span key={c} className="filter-tag">#{c}</span>)}
-      </div>
-      {loading ? <div className="spinner"></div> : (
+    <div>
+      {loading ? <div className="spinner" style={{margin:'100px auto', width:'40px', height:'40px', border:'4px solid #ddd', borderTopColor:'#c59235', borderRadius:'50%', animation:'spin 1s linear infinite'}}></div> : (
         <div className="news-container">
-          {articles.map((news, index) => (
-            <NewsItem 
-              key={index} 
-              title={news.title} 
-              description={news.description} 
-              src={news.urlToImage} 
-              url={news.url} 
-              source={news.source.name} 
-              publishedAt={news.publishedAt}
-            />
+          {articles.map((news, i) => (
+            <NewsItem key={i} title={news.title} description={news.description} src={news.urlToImage} url={news.url} source={news.source.name} publishedAt={news.publishedAt} />
           ))}
         </div>
       )}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 };
