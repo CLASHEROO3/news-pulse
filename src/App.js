@@ -9,20 +9,12 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem('newspulse_visited');
-    if (!hasVisited) setShowOnboarding(true);
-    
-    // Set initial title
-    document.title = "NewsPulse | Latest News";
+    const visited = localStorage.getItem('newspulse_visited');
+    if (!visited) setShowOnboarding(true);
   }, []);
 
-  useEffect(() => {
-    const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-    document.title = `NewsPulse | ${cap(category)} News`;
-  }, [category]);
-
-  const handleCustomization = (selectedCat) => {
-    setCategory(selectedCat);
+  const handleCustomization = (cat) => {
+    setCategory(cat);
     localStorage.setItem('newspulse_visited', 'true');
     setShowOnboarding(false);
   };
@@ -32,56 +24,43 @@ function App() {
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="Logo" style={{height: '60px', width:'auto'}} />
+            <img src="/logo.png" alt="Logo" className="modal-logo" />
             <h2>Welcome to NewsPulse</h2>
-            <p>Pick a topic to personalize your feed</p>
-            <div className="onboarding-options">
+            <p>Select your favorite topic to begin:</p>
+            <div className="category-bar">
               {["technology", "business", "sports", "health"].map(cat => (
-                <button key={cat} onClick={() => handleCustomization(cat)} className="cat-btn">
-                  {cat}
-                </button>
+                <button key={cat} onClick={() => handleCustomization(cat)} className="cat-btn">{cat}</button>
               ))}
             </div>
-            <button className="skip-btn" onClick={() => handleCustomization("general")}>Skip for now</button>
+            <button className="cat-btn" style={{marginTop:'20px', border:'none'}} onClick={() => handleCustomization("general")}>Skip</button>
           </div>
         </div>
       )}
 
       <nav className="navbar">
         <div className="logo-section">
-          <button className="menu-toggle" onClick={() => setIsMenuOpen(true)}>☰</button>
-          <img src="/logo.png" alt="NP" className="nav-logo" />
+          <button className="cat-btn" style={{background:'none', color:'white', border:'none', fontSize:'1.5rem'}} onClick={() => setIsMenuOpen(true)}>☰</button>
+          <img src="/logo.png" alt="Logo" className="nav-logo" />
           <div className="logo-text">News<span>Pulse</span></div>
         </div>
         <div className="date-display">{new Date().toDateString()}</div>
       </nav>
 
       <div className={`sidebar ${isMenuOpen ? 'open' : ''}`}>
-        <button className="close-sidebar" onClick={() => setIsMenuOpen(false)}>×</button>
-        <h3 className="sidebar-title">Explore</h3>
-        {["general", "technology", "business", "sports", "entertainment", "health"].map((cat) => (
-          <button 
-            key={cat} 
-            onClick={() => { setCategory(cat); setIsMenuOpen(false); }} 
-            className={`sidebar-link ${category === cat ? 'active' : ''}`}
-          >
-            {cat}
-          </button>
+        <button onClick={() => setIsMenuOpen(false)} style={{background:'none', border:'none', color:'white', fontSize:'2rem', cursor:'pointer'}}>×</button>
+        <h2 style={{color:'var(--gold)', paddingLeft:'15px'}}>Explore</h2>
+        {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
+          <button key={cat} className={`sidebar-link ${category===cat?'active':''}`} onClick={() => {setCategory(cat); setIsMenuOpen(false);}}>{cat}</button>
         ))}
       </div>
 
-      <div className="news-tabs-container">
-        <button className={`tab-btn ${country === 'in' ? 'active' : ''}`} onClick={() => setCountry('in')}>India News</button>
-        <button className={`tab-btn ${country === 'us' ? 'active' : ''}`} onClick={() => setCountry('us')}>Global News</button>
+      <div className="news-tabs">
+        <button className={`tab-btn ${country==='in'?'active':''}`} onClick={() => setCountry('in')}>India News</button>
+        <button className={`tab-btn ${country==='us'?'active':''}`} onClick={() => setCountry('us')}>Global News</button>
       </div>
 
       <NewsBoard category={category} country={country} />
-
-      <footer className="footer-dark">
-        <p><strong>NewsPulse Aggregator</strong> | Final Year Project</p>
-      </footer>
     </div>
   );
 }
-
 export default App;
