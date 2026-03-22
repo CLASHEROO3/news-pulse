@@ -1,105 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-
 :root {
-  --gold: #c59235; 
-  --navy: #0a192f;   
-  --cream: #fdfaf1;    
-  --border: #e8e2d5;
+  --gold: #c59235; --navy: #0a192f; --cream: #fdfaf1; --border: #e8e2d5;
 }
 
-* { box-sizing: border-box; }
-body { 
-  margin: 0; font-family: 'Inter', sans-serif; background: var(--cream); 
-  background-image: radial-gradient(#d1cdc2 0.5px, transparent 0.5px);
-  background-size: 20px 20px;
-  overflow-x: hidden;
-}
+body { background: var(--cream); margin: 0; font-family: 'Inter', sans-serif; }
 
-/* NAVBAR - Fixed Height */
-.navbar {
-  background: var(--navy); height: 70px; padding: 0 5%;
-  display: flex; justify-content: space-between; align-items: center;
-  position: sticky; top: 0; z-index: 1000; color: white;
-}
-.nav-logo { height: 35px !important; width: auto !important; }
-.logo-section { display: flex; align-items: center; gap: 15px; }
-
-/* SIDEBAR */
-.sidebar {
-  position: fixed; top: 0; left: -300px; width: 300px; height: 100%;
-  background: var(--navy); z-index: 2000; transition: 0.4s; padding: 20px;
-}
-.sidebar.open { left: 0; }
-.sidebar-link {
-  display: block; width: 100%; padding: 15px; background: none; border: none;
-  color: #94a3b8; text-align: left; font-size: 1.1rem; cursor: pointer;
-  border-bottom: 1px solid #1e293b; text-transform: capitalize;
-}
-.sidebar-link.active { color: var(--gold); }
-
-/* TABS */
-.news-tabs { display: flex; justify-content: center; background: white; border-bottom: 1px solid var(--border); }
-.tab-btn { padding: 15px 25px; border: none; background: none; font-weight: 700; cursor: pointer; color: #94a3b8; border-bottom: 3px solid transparent;}
-.tab-btn.active { color: var(--gold); border-bottom: 3px solid var(--gold); }
-
-/* NEWS GRID - Fixed Card Sizing */
-.news-container {
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px; 
-  padding: 30px 5%;
-}
-
-/* NEWS CARD - Fixed Height */
-.news-card { 
-  background: white; 
-  border-radius: 12px; 
-  overflow: hidden; 
-  border: 1px solid var(--border); 
-  display: flex; 
-  flex-direction: column;
-  height: 450px; /* Forces all cards to be the same height */
-}
-
-.card-img-container { 
-  height: 180px; /* Fixed image height */
-  width: 100%; 
-  background: black; 
-  position: relative; 
-  overflow: hidden;
-}
-
-.card-img { 
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover; /* This stops the image from exploding */
-}
-
-.news-content { 
-  padding: 20px; 
-  flex-grow: 1; 
-  display: flex; 
-  flex-direction: column;
-}
-
-.time-tag { font-size: 0.75rem; color: var(--gold); font-weight: 800; margin-bottom: 8px; }
-.news-content h3 { font-size: 1.05rem; margin: 0 0 10px 0; line-height: 1.3; height: 2.6em; overflow: hidden; }
-.news-content p { font-size: 0.85rem; color: #5c5952; line-height: 1.5; height: 4.5em; overflow: hidden; }
-
-.news-btn { 
-  display: block; 
-  text-align: center; 
-  background: var(--navy); 
-  color: var(--gold); 
-  padding: 12px; 
-  text-decoration: none; 
-  font-weight: 700; 
-  margin-top: auto; /* Pushes button to bottom */
-}
-
-/* MODAL */
+/* MODAL IMPROVEMENTS */
 .modal-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(10, 25, 47, 0.9); display: flex; align-items: center; justify-content: center; z-index: 9999;
+  background: rgba(10, 25, 47, 0.9); z-index: 9999; display: flex; align-items: center; justify-content: center;
 }
-.modal-box { background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 400px; border: 3px solid var(--gold); }
+.modal-box {
+  background: white; border-radius: 24px; padding: 40px; width: 90%; max-width: 500px;
+  text-align: center; border: 4px solid var(--gold); box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+.modal-logo { height: 50px; margin-bottom: 20px; }
+.onboarding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 25px 0; }
+.onboarding-chip {
+  padding: 12px; border-radius: 12px; border: 2px solid #eee; background: white;
+  font-weight: 600; cursor: pointer; text-transform: capitalize; transition: 0.2s;
+}
+.onboarding-chip.active { border-color: var(--gold); background: var(--navy); color: var(--gold); }
+.save-btn {
+  background: var(--navy); color: var(--gold); border: none; padding: 15px 40px;
+  border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; width: 100%;
+}
+
+/* NAVBAR */
+.navbar { background: var(--navy); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; position: sticky; top: 0; z-index: 1000; }
+.nav-logo { height: 40px; }
+.logo-text { color: white; font-weight: 800; font-size: 1.5rem; }
+.logo-text span { color: var(--gold); }
+.custom-btn { background: var(--gold); color: var(--navy); border: none; padding: 8px 15px; border-radius: 6px; font-weight: 700; cursor: pointer; margin-right: 15px; }
+
+/* CARD & TIME */
+.card-time { font-size: 0.75rem; color: var(--gold); font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+.active-filters { padding: 20px 5%; display: flex; gap: 10px; overflow-x: auto; }
+.filter-tag { background: white; border: 1px solid var(--gold); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: var(--navy); }
+
+/* GRID FIX */
+.news-container {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px; padding: 0 5% 50px 5%;
+}
+.news-card { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; height: 480px; display: flex; flex-direction: column; }
+.card-image-wrap { height: 200px; position: relative; }
+.card-img { width: 100%; height: 100%; object-fit: cover; }
+.card-badge { position: absolute; top: 12px; left: 12px; background: var(--gold); color: var(--navy); padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.7rem; }
+.read-more-btn { margin-top: auto; background: var(--navy); color: var(--gold); text-align: center; padding: 15px; text-decoration: none; font-weight: 700; }

@@ -3,19 +3,31 @@ import './App.css';
 import NewsBoard from './Components/NewsBoard';
 
 function App() {
-  const [category, setCategory] = useState("general");
+  // Now using an array for multiple categories
+  const [selectedCats, setSelectedCats] = useState(["general"]);
   const [country, setCountry] = useState("in");
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const visited = localStorage.getItem('newspulse_visited');
-    if (!visited) setShowOnboarding(true);
+    const saved = localStorage.getItem('newspulse_config');
+    if (!saved) {
+      setShowOnboarding(true);
+    } else {
+      setSelectedCats(JSON.parse(saved));
+    }
   }, []);
 
-  const handleCustomization = (cat) => {
-    setCategory(cat);
-    localStorage.setItem('newspulse_visited', 'true');
+  const toggleCategory = (cat) => {
+    if (selectedCats.includes(cat)) {
+      if (selectedCats.length > 1) setSelectedCats(selectedCats.filter(c => c !== cat));
+    } else {
+      setSelectedCats([...selectedCats, cat]);
+    }
+  };
+
+  const saveAndExit = () => {
+    localStorage.setItem('newspulse_config', JSON.stringify(selectedCats));
     setShowOnboarding(false);
   };
 
@@ -24,40 +36,55 @@ function App() {
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <h2>Welcome to NewsPulse</h2>
-            <p>Pick a topic to begin:</p>
-            <div style={{display:'flex', flexWrap:'wrap', gap:'10px', justifyContent:'center'}}>
-              {["technology", "business", "sports", "health"].map(cat => (
-                <button key={cat} onClick={() => handleCustomization(cat)} style={{padding:'8px 15px', borderRadius:'20px', cursor:'pointer'}}>{cat}</button>
+            <div className="modal-header">
+              <img src="/logo.png" alt="Logo" className="modal-logo" />
+              <h2>Personalize Your Feed</h2>
+              <p>Select the topics you want to follow. We'll curate a custom feed for you.</p>
+            </div>
+            <div className="onboarding-grid">
+              {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
+                <button 
+                  key={cat} 
+                  className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`}
+                  onClick={() => toggleCategory(cat)}
+                >
+                  {cat} {selectedCats.includes(cat) ? '✓' : '+'}
+                </button>
               ))}
             </div>
+            <button className="save-btn" onClick={saveAndExit}>Start Reading</button>
           </div>
         </div>
       )}
 
       <nav className="navbar">
         <div className="logo-section">
-          <button style={{background:'none', border:'none', color:'white', fontSize:'1.5rem', cursor:'pointer'}} onClick={() => setIsMenuOpen(true)}>☰</button>
+          <button className="menu-icon" onClick={() => setIsMenuOpen(true)}>☰</button>
           <img src="/logo.png" alt="Logo" className="nav-logo" />
           <div className="logo-text">News<span>Pulse</span></div>
         </div>
-        <div className="date-display">{new Date().toDateString()}</div>
+        <div className="nav-actions">
+          <button className="custom-btn" onClick={() => setShowOnboarding(true)}>⚙ Customize</button>
+          <span className="date-label">{new Date().toDateString()}</span>
+        </div>
       </nav>
 
       <div className={`sidebar ${isMenuOpen ? 'open' : ''}`}>
-        <button onClick={() => setIsMenuOpen(false)} style={{background:'none', border:'none', color:'white', fontSize:'2rem', cursor:'pointer', marginBottom:'20px'}}>×</button>
-        {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
-          <button key={cat} className={`sidebar-link ${category===cat?'active':''}`} onClick={() => {setCategory(cat); setIsMenuOpen(false);}}>{cat}</button>
-        ))}
+        <button className="close-sidebar" onClick={() => setIsMenuOpen(false)}>×</button>
+        <h3 className="sidebar-header">Switch Source</h3>
+        <div className="news-tabs-vertical">
+          <button className={country === 'in' ? 'active' : ''} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>India News</button>
+          <button className={country === 'us' ? 'active' : ''} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>Global News</button>
+        </div>
       </div>
 
-      <div className="news-tabs">
-        <button className={`tab-btn ${country==='in'?'active':''}`} onClick={() => setCountry('in')}>India News</button>
-        <button className={`tab-btn ${country==='us'?'active':''}`} onClick={() => setCountry('us')}>Global News</button>
-      </div>
-
-      <NewsBoard category={category} country={country} />
+      <NewsBoard selectedCats={selectedCats} country={country} />
+      
+      <footer className="footer-professional">
+        <p>© 2024 NewsPulse Aggregator | Powered by Real-time News Engine</p>
+      </footer>
     </div>
   );
 }
+
 export default App;
