@@ -1,3 +1,7 @@
+/**
+ * NewsBoard Component
+ * Handles data fetching logic and maps headlines into UI cards.
+ */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NewsItem from './NewsItem';
@@ -9,21 +13,21 @@ const NewsBoard = ({ category, country }) => {
   useEffect(() => {
     setLoading(true);
     
-    // This API is open-source and perfect for hosted projects
-    // It maps category and country directly into the URL
+    // Using Saurav's News API (Mirror of NewsAPI that works on Hosted Sites)
     const url = `https://saurav.tech/NewsAPI/top-headlines/category/${category}/${country}.json`;
 
     axios.get(url)
       .then(response => {
-        // This API returns the same 'articles' format as NewsAPI
-        setArticles(response.data.articles.slice(0, 24));
+        // Cleaning Data: Filter out articles with missing essential info
+        const cleanData = response.data.articles.filter(item => item.title && item.url);
+        setArticles(cleanData.slice(0, 24)); // Displaying top 24 results
         setLoading(false);
       })
-      .catch((err) => {
-        console.error("API Error:", err);
+      .catch((error) => {
+        console.error("Critical API Error:", error);
         setLoading(false);
       });
-  }, [category, country]);
+  }, [category, country]); // Re-fetch data whenever category or country changes
 
   return (
     <div>
