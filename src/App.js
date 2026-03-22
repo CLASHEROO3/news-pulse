@@ -24,22 +24,20 @@ function App() {
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="Logo" className="modal-logo" />
             <h2>Welcome to NewsPulse</h2>
-            <p>Select your favorite topic to begin:</p>
-            <div className="category-bar">
+            <p>Pick a topic to begin:</p>
+            <div style={{display:'flex', flexWrap:'wrap', gap:'10px', justifyContent:'center'}}>
               {["technology", "business", "sports", "health"].map(cat => (
-                <button key={cat} onClick={() => handleCustomization(cat)} className="cat-btn">{cat}</button>
+                <button key={cat} onClick={() => handleCustomization(cat)} style={{padding:'8px 15px', borderRadius:'20px', cursor:'pointer'}}>{cat}</button>
               ))}
             </div>
-            <button className="cat-btn" style={{marginTop:'20px', border:'none'}} onClick={() => handleCustomization("general")}>Skip</button>
           </div>
         </div>
       )}
 
       <nav className="navbar">
         <div className="logo-section">
-          <button className="cat-btn" style={{background:'none', color:'white', border:'none', fontSize:'1.5rem'}} onClick={() => setIsMenuOpen(true)}>☰</button>
+          <button style={{background:'none', border:'none', color:'white', fontSize:'1.5rem', cursor:'pointer'}} onClick={() => setIsMenuOpen(true)}>☰</button>
           <img src="/logo.png" alt="Logo" className="nav-logo" />
           <div className="logo-text">News<span>Pulse</span></div>
         </div>
@@ -47,8 +45,7 @@ function App() {
       </nav>
 
       <div className={`sidebar ${isMenuOpen ? 'open' : ''}`}>
-        <button onClick={() => setIsMenuOpen(false)} style={{background:'none', border:'none', color:'white', fontSize:'2rem', cursor:'pointer'}}>×</button>
-        <h2 style={{color:'var(--gold)', paddingLeft:'15px'}}>Explore</h2>
+        <button onClick={() => setIsMenuOpen(false)} style={{background:'none', border:'none', color:'white', fontSize:'2rem', cursor:'pointer', marginBottom:'20px'}}>×</button>
         {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
           <button key={cat} className={`sidebar-link ${category===cat?'active':''}`} onClick={() => {setCategory(cat); setIsMenuOpen(false);}}>{cat}</button>
         ))}
