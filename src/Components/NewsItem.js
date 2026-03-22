@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 
 const NewsItem = ({ title, description, urlToImage, url, sourceName, publishedAt }) => {
@@ -14,13 +15,13 @@ const NewsItem = ({ title, description, urlToImage, url, sourceName, publishedAt
   return (
     <div className="news-card">
       <div className="card-img-box">
-        <img src={urlToImage || defaultImg} alt="news" onError={(e) => e.target.src = defaultImg} />
+        <img src={urlToImage || defaultImg} alt="news" onError={(e) => { e.target.src = defaultImg; }} />
         <span className="card-badge">{sourceName}</span>
       </div>
       <div className="card-body">
         <div className="card-time">⏱ {getPreciseTime(publishedAt)}</div>
-        <h3>{title ? title.slice(0, 65) : "News Update"}...</h3>
-        <p>{description ? description.slice(0, 95) : "Click below for full coverage."}...</p>
+        <h3>{title ? title.slice(0, 65) : "Headline Loading..."}</h3>
+        <p>{description ? description.slice(0, 95) : "Full details available in the article linked below."}...</p>
         <a href={url} target="_blank" rel="noreferrer" className="read-btn">Read Full Story</a>
       </div>
     </div>

@@ -12,65 +12,34 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
       setLoading(true);
       try {
         let allArticles = [];
-
         if (activeView === "for-you") {
-          // Get news for all selected categories
-          const requests = selectedCats.map(cat => 
-            axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${cat}/${country}.json`)
-          );
+          const requests = selectedCats.map(cat => axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${cat}/${country}.json`));
           const responses = await Promise.all(requests);
-          responses.forEach(r => {
-            if (r.data && r.data.articles) {
-              allArticles = [...allArticles, ...r.data.articles];
-            }
-          });
+          responses.forEach(r => { if (r.data && r.data.articles) allArticles = [...allArticles, ...r.data.articles]; });
         } else {
-          // Get news for one specific category
           const res = await axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${activeView}/${country}.json`);
           allArticles = res.data.articles || [];
         }
 
-        // Sort: Newest first
         allArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-
-        // Remove duplicates based on URL
-        const uniqueArticles = Array.from(new Set(allArticles.map(a => a.url)))
-          .map(url => allArticles.find(a => a.url === url));
-
-        setArticles(uniqueArticles.slice(0, 40));
+        const unique = Array.from(new Set(allArticles.map(a => a.url))).map(url => allArticles.find(a => a.url === url));
+        setArticles(unique.slice(0, 40));
         setLoading(false);
-      } catch (e) { 
-        console.error("Fetch Error:", e);
-        setLoading(false); 
-      }
+      } catch (e) { setLoading(false); }
     };
     fetchData();
   }, [activeView, selectedCats, country]);
 
   return (
     <div>
-      <div className="view-indicator">
-        {activeView === 'for-you' ? (
-          <p>Personalized feed: <b>{selectedCats.join(", ")}</b></p>
-        ) : (
-          <p>Browsing <b>{activeView}</b></p>
-        )}
-      </div>
-      {loading ? <div className="spinner-center"></div> : (
+      {loading ? <div className="spinner-center" style={{margin:'100px auto', width:'40px', height:'40px', border:'4px solid #ddd', borderTopColor:'#c59235', borderRadius:'50%', animation:'spin 1s linear infinite'}}></div> : (
         <div className="news-container">
           {articles.map((news, i) => (
-            <NewsItem 
-              key={i} 
-              title={news.title}
-              description={news.description}
-              urlToImage={news.urlToImage}
-              url={news.url}
-              sourceName={news.source ? news.source.name : "News"}
-              publishedAt={news.publishedAt}
-            />
+            <NewsItem key={i} title={news.title} description={news.description} urlToImage={news.urlToImage} url={news.url} sourceName={news.source.name} publishedAt={news.publishedAt} />
           ))}
         </div>
       )}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 };

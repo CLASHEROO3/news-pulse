@@ -38,20 +38,17 @@ function App() {
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="Logo" className="modal-logo" />
-            <h2>Personalize Your Feed</h2>
+            <img src="/logo.png" alt="Logo" style={{height:'60px', marginBottom:'20px'}} />
+            <h2>Personalize NewsPulse</h2>
+            <p>Select topics for your <b>"For You"</b> feed.</p>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
-                <button 
-                  key={cat} 
-                  className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`}
-                  onClick={() => toggleCategory(cat)}
-                >
+                <button key={cat} className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} onClick={() => toggleCategory(cat)}>
                   {cat} {selectedCats.includes(cat) ? '✓' : '+'}
                 </button>
               ))}
             </div>
-            <button className="save-btn" onClick={saveAndExit}>Apply</button>
+            <button className="save-btn" onClick={saveAndExit}>Start Reading</button>
           </div>
         </div>
       )}
@@ -60,7 +57,7 @@ function App() {
         <div className="nav-left">
           <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
           <div className="brand">
-            <img src="/logo.png" alt="Logo" className="nav-logo" />
+            <img src="/logo.png" alt="NP" className="nav-logo" />
             <h1 className="logo-text">News<span>Pulse</span></h1>
           </div>
         </div>
@@ -72,7 +69,7 @@ function App() {
 
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h3>Settings</h3>
+          <h3>Region Settings</h3>
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
@@ -92,7 +89,7 @@ function App() {
       <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} />
       
       <footer className="footer-final">
-        <p>© 2024 NewsPulse Aggregator</p>
+        <p>© 2024 NewsPulse Aggregator | Built with React</p>
       </footer>
     </div>
   );

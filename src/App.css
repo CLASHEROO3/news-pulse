@@ -1,27 +1,130 @@
-/* SUB-NAVBAR STYLING */
-.sub-nav {
-  display: flex; gap: 10px; padding: 10px 5%;
-  background: white; border-bottom: 1px solid var(--border);
-  overflow-x: auto; white-space: nowrap; sticky; top: 80px; z-index: 900;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:root {
+  --gold: #c59235; 
+  --navy: #0a192f;   
+  --cream: #fdfaf1;    
+  --border: #e8e2d5;
 }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--cream);
+  background-image: radial-gradient(#d1cdc2 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+  overflow-x: hidden;
+}
+
+/* NAVBAR */
+.navbar {
+  background: var(--navy);
+  height: 75px;
+  padding: 0 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.nav-left, .brand { display: flex; align-items: center; gap: 15px; }
+.hamburger { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+.nav-logo { height: 35px !important; width: auto !important; object-fit: contain; }
+.logo-text { color: white; margin: 0; font-size: 1.4rem; font-weight: 800; }
+.logo-text span { color: var(--gold); }
+.nav-right { display: flex; align-items: center; gap: 20px; }
+.customize-btn { background: var(--gold); color: var(--navy); border: none; padding: 8px 15px; border-radius: 6px; font-weight: 800; cursor: pointer; }
+.nav-date { color: #94a3b8; font-size: 0.8rem; font-weight: 600; }
+
+/* SUB-NAVBAR (Sticky Categories) */
+.sub-nav {
+  display: flex; 
+  gap: 10px; 
+  padding: 10px 5%;
+  background: white; 
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; 
+  white-space: nowrap; 
+  position: sticky; /* Corrected syntax */
+  top: 75px; 
+  z-index: 900;
+}
+
 .sub-nav-item {
   padding: 8px 20px; border-radius: 20px; border: 1px solid transparent;
   background: none; cursor: pointer; font-weight: 700; text-transform: capitalize;
   color: #64748b; transition: 0.3s;
 }
+
 .sub-nav-item.active { background: var(--navy); color: var(--gold); }
-.sub-nav-item:hover:not(.active) { background: #f1f5f9; color: var(--navy); }
+.sub-nav::-webkit-scrollbar { display: none; } /* Hide scrollbar */
 
-/* VIEW INDICATOR */
-.view-indicator { padding: 15px 5% 0 5%; font-size: 0.9rem; color: #64748b; }
-.view-indicator b { color: var(--gold); text-transform: capitalize; }
+/* SIDEBAR DRAWER */
+.sidebar-drawer {
+  position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
+  background: var(--navy); z-index: 2000; transition: 0.4s ease; padding: 30px 20px;
+}
+.sidebar-drawer.open { left: 0; }
+.sidebar-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold); margin-bottom: 20px; color: white; padding-bottom: 10px; }
+.close-btn { background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
+.sidebar-content button { 
+  display: block; width: 100%; padding: 15px; text-align: left; background: none; 
+  border: none; color: #94a3b8; font-size: 1.1rem; cursor: pointer; border-bottom: 1px solid #1e293b;
+}
+.sidebar-content button.active { color: var(--gold); font-weight: 800; }
+.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; }
 
-/* NEWS CARD - FIXED HEIGHT */
-.news-card { height: 460px; display: flex; flex-direction: column; background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
-.card-img-box { height: 180px; position: relative; }
+/* MODAL FIX */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,25,47,0.95); z-index: 5000; display: flex; align-items: center; justify-content: center; }
+.modal-box { background: white; border-radius: 24px; padding: 40px; width: 90%; max-width: 450px; text-align: center; border: 4px solid var(--gold); }
+.onboarding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 25px 0; }
+.onboarding-chip { padding: 12px; border-radius: 12px; border: 2px solid #eee; background: white; font-weight: 600; cursor: pointer; text-transform: capitalize; }
+.onboarding-chip.active { background: var(--navy); color: var(--gold); border-color: var(--gold); }
+.save-btn { background: var(--navy); color: var(--gold); border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; }
+
+/* GRID & CARDS */
+.news-container {
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px; 
+  padding: 30px 5% 100px 5%;
+}
+
+.news-card {
+  background: white; border-radius: 16px; overflow: hidden;
+  border: 1px solid var(--border); height: 480px; display: flex; flex-direction: column;
+  transition: transform 0.3s;
+}
+.news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+.card-img-box { height: 200px; width: 100%; position: relative; background: #000; }
 .card-img-box img { width: 100%; height: 100%; object-fit: cover; }
-.read-btn { margin-top: auto; background: var(--navy); color: var(--gold); text-align: center; padding: 12px; text-decoration: none; font-weight: 800; }
 
-/* SPINNER */
-.spinner-center { border: 4px solid #f3f3f3; border-top: 4px solid var(--gold); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 100px auto; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.card-badge {
+  position: absolute; top: 12px; left: 12px;
+  background: var(--gold); color: var(--navy);
+  padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.7rem;
+}
+
+.card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+.card-time { font-size: 0.75rem; color: var(--gold); font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+.card-body h3 { font-size: 1.1rem; margin: 0 0 10px 0; line-height: 1.4; color: var(--navy); height: 3em; overflow: hidden; }
+.card-body p { font-size: 0.9rem; color: #5c5952; line-height: 1.6; height: 4.8em; overflow: hidden; margin-bottom: 15px; }
+
+.read-btn {
+  margin-top: auto; background: var(--navy); color: var(--gold);
+  text-align: center; padding: 15px; text-decoration: none; font-weight: 800;
+}
+
+.footer-final { text-align: center; padding: 4rem; background: var(--navy); color: var(--gold); }
+
+@media (max-width: 768px) {
+  .news-container { grid-template-columns: 1fr; padding: 20px 15px; }
+  .nav-date { display: none; }
+}
