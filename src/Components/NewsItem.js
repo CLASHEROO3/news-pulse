@@ -7,12 +7,11 @@ const NewsItem = ({ title, description, src, url, source, publishedAt }) => {
     if(!dateStr) return "Recently";
     const now = new Date();
     const then = new Date(dateStr);
-    const diffInSeconds = Math.floor((now - then) / 1000);
+    const diff = Math.floor((now - then) / 1000);
 
-    if (diffInSeconds < 60) return "Just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} mins ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-    if (diffInSeconds < 172800) return "Yesterday";
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
     return then.toLocaleDateString();
   };
 
@@ -24,7 +23,7 @@ const NewsItem = ({ title, description, src, url, source, publishedAt }) => {
       </div>
       <div className="news-content">
         <div className="time-tag">🕒 {formatTime(publishedAt)}</div>
-        <h3>{title ? title.slice(0, 60) : "Headline Update"}...</h3>
+        <h3>{title ? title.slice(0, 60) : "Latest Update"}...</h3>
         <p>{description ? description.slice(0, 90) : "Stay informed with the latest updates on this story."}...</p>
       </div>
       <a href={url} target="_blank" rel="noreferrer" className="news-btn">Read More</a>

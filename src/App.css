@@ -1,120 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-
-:root {
-  --primary-gold: #c59235; 
-  --dark-navy: #0a192f;   
-  --cream-bg: #fdfaf1;    
-  --cream-card: #fffefc;
-  --cream-border: #e8e2d5;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: var(--cream-bg);
-  background-image: radial-gradient(#d1cdc2 0.5px, transparent 0.5px);
-  background-size: 20px 20px;
-  color: var(--dark-navy);
-  overflow-x: hidden;
-}
-
-/* NAVBAR FIX */
-.navbar {
-  background: var(--dark-navy);
-  padding: 0.7rem 10%;
+/* Add these to your existing App.css or replace all */
+.news-tabs-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  color: white;
-  height: 70px; /* Fixed height to prevent layout jumps */
-}
-
-.logo-section { display: flex; align-items: center; gap: 12px; }
-
-/* LOGO SIZE CONSTRAINT */
-.nav-logo { 
-  height: 40px !important; 
-  width: auto !important; 
-  object-fit: contain;
-}
-
-.logo-text { font-size: 1.4rem; font-weight: 800; color: white; }
-.logo-text span { color: var(--primary-gold); }
-.date-display { font-weight: 600; color: #94a3b8; font-size: 0.8rem; }
-
-/* MODAL / POPUP FIX */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(10, 25, 47, 0.9); /* Dark Navy Transparent */
-  z-index: 9999;
-  display: flex;
-  align-items: center;
   justify-content: center;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
 }
-
-.modal-box {
-  background: var(--cream-card);
-  padding: 2.5rem;
-  border-radius: 20px;
-  text-align: center;
-  max-width: 450px;
-  width: 90%;
-  border: 3px solid var(--primary-gold);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+.sidebar-title {
+  color: #c59235; 
+  margin-bottom: 20px; 
+  border-bottom: 1px solid #c59235; 
+  padding-bottom: 10px;
 }
-
-.modal-box h2 { font-size: 1.8rem; margin: 15px 0; color: var(--dark-navy); }
-.onboarding-options { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
-
-/* SIDEBAR FIX */
-.sidebar {
-  position: fixed; top: 0; left: -300px; width: 300px; height: 100vh;
-  background: var(--dark-navy); color: white; z-index: 2000;
-  transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 80px 2rem 2rem 2rem;
-  box-shadow: 10px 0 30px rgba(0,0,0,0.3);
+.skip-btn {
+  margin-top: 20px; 
+  background: none; 
+  border: none; 
+  cursor: pointer; 
+  color: #64748b; 
+  text-decoration: underline;
 }
-
-.sidebar.open { left: 0; }
-
-.sidebar-link {
-  display: block; width: 100%; text-align: left; background: none; border: none;
-  color: #94a3b8; padding: 15px 0; font-size: 1.1rem; text-transform: capitalize;
-  cursor: pointer; border-bottom: 1px solid #1e293b; transition: 0.3s;
-}
-
-.sidebar-link:hover, .sidebar-link.active { color: var(--primary-gold); padding-left: 10px; }
-
-.menu-toggle { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-.close-sidebar { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
-
-/* BUTTONS */
-.cat-btn {
-  padding: 8px 18px; border-radius: 30px; border: 1px solid var(--dark-navy);
-  background: white; cursor: pointer; font-weight: 600; text-transform: capitalize;
-}
-
-.cat-btn.active, .onboarding-options .cat-btn:hover {
-  background: var(--dark-navy); color: var(--primary-gold);
-}
-
-/* NEWS CARDS & TIME TAG */
-.news-container {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem; padding: 2rem 10% 5rem 10%;
-}
-
-.time-tag { font-size: 0.75rem; color: var(--primary-gold); font-weight: 800; margin-bottom: 8px; display: block; }
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .news-container { padding: 1rem 15px; grid-template-columns: 1fr; }
-  .navbar { padding: 0.7rem 15px; }
-  .date-display { display: none; }
+.footer-dark {
+  text-align: center; 
+  padding: 3rem; 
+  background: #0a192f; 
+  color: #c59235;
 }

@@ -15,7 +15,10 @@ const NewsBoard = ({ category, country }) => {
         setArticles(response.data.articles.slice(0, 24));
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        setLoading(false);
+      });
   }, [category, country]);
 
   return (
@@ -32,7 +35,7 @@ const NewsBoard = ({ category, country }) => {
                 src={news.urlToImage} 
                 url={news.url} 
                 source={news.source.name} 
-                publishedAt={news.publishedAt} // THIS IS IMPORTANT
+                publishedAt={news.publishedAt}
               />
           ))}
         </div>
