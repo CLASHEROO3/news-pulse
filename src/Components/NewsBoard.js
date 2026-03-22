@@ -1,11 +1,11 @@
-/**
- * NewsBoard Component
- * Handles data fetching logic and maps headlines into UI cards.
- */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NewsItem from './NewsItem';
 
+/**
+ * NewsBoard Component
+ * Fetches data from Saurav's Open-Source News API (Mirror of NewsAPI).
+ */
 const NewsBoard = ({ category, country }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,21 +13,21 @@ const NewsBoard = ({ category, country }) => {
   useEffect(() => {
     setLoading(true);
     
-    // Using Saurav's News API (Mirror of NewsAPI that works on Hosted Sites)
+    // Choosing Saurav's API because it allows free hosting on Vercel/Netlify
     const url = `https://saurav.tech/NewsAPI/top-headlines/category/${category}/${country}.json`;
 
     axios.get(url)
       .then(response => {
-        // Cleaning Data: Filter out articles with missing essential info
-        const cleanData = response.data.articles.filter(item => item.title && item.url);
-        setArticles(cleanData.slice(0, 24)); // Displaying top 24 results
+        // Cleaning data: showing only articles that have a title
+        const cleanData = response.data.articles.filter(item => item.title && item.title !== "[Removed]");
+        setArticles(cleanData.slice(0, 24));
         setLoading(false);
       })
       .catch((error) => {
         console.error("Critical API Error:", error);
         setLoading(false);
       });
-  }, [category, country]); // Re-fetch data whenever category or country changes
+  }, [category, country]);
 
   return (
     <div>
@@ -35,7 +35,8 @@ const NewsBoard = ({ category, country }) => {
         <div className="spinner"></div>
       ) : (
         <div className="news-container">
-          {articles.map((news, index) => (
+          {articles.length > 0 ? (
+            articles.map((news, index) => (
               <NewsItem 
                 key={index} 
                 title={news.title} 
@@ -44,7 +45,12 @@ const NewsBoard = ({ category, country }) => {
                 url={news.url} 
                 source={news.source.name} 
               />
-          ))}
+            ))
+          ) : (
+            <div style={{textAlign:'center', width:'100%', padding:'100px'}}>
+              <h2>News currently unavailable for this category.</h2>
+            </div>
+          )}
         </div>
       )}
     </div>

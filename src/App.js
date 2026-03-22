@@ -1,24 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import NewsBoard from './Components/NewsBoard';
 
 /**
- * Main Application Component
- * Manages the global state for Category and Country filtering.
+ * Main App Component
+ * Manages State for Category, Country, and Dynamic Browser Tab Title.
  */
 function App() {
   const [category, setCategory] = useState("general");
-  const [country, setCountry] = useState("in"); // Default: India
+  const [country, setCountry] = useState("in"); // Starts with India
+
+  // DYNAMIC TAB TITLE LOGIC
+  useEffect(() => {
+    // Capitalizes the first letter for the tab title
+    const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+    document.title = `NewsPulse | ${capitalize(category)} News`;
+  }, [category]); // Updates every time the category changes
 
   return (
     <div className="App">
-      {/* Professional Navigation Bar */}
+      {/* Top Header */}
       <nav className="navbar">
         <div className="logo">News<span>Pulse</span></div>
-        <div className="date-display">{new Date().toDateString()}</div>
+        <div className="current-date">{new Date().toDateString()}</div>
       </nav>
 
-      {/* Primary Tabs: India vs Global */}
+      {/* Primary Navigation: India vs Global */}
       <div className="news-tabs">
         <button 
           className={`tab-btn ${country === 'in' ? 'active' : ''}`} 
@@ -34,7 +41,7 @@ function App() {
         </button>
       </div>
 
-      {/* Secondary Filter: Category Sub-menu */}
+      {/* Secondary Navigation: Categories */}
       <div className="category-bar">
         {["general", "technology", "business", "sports", "entertainment", "health"].map((cat) => (
           <button 
@@ -47,13 +54,14 @@ function App() {
         ))}
       </div>
 
-      {/* News Board Logic */}
+      {/* Main Content Area */}
       <NewsBoard category={category} country={country} />
 
       {/* Professional Footer */}
       <footer className="footer">
-        <p><strong>NewsPulse Aggregator</strong></p>
-        <p>A Final Year Engineering Project | © 2024</p>
+        <h3>NewsPulse Aggregator</h3>
+        <p>A Professional Final Year College Project | © 2024</p>
+        <p className="footer-tag">Live Data powered by Saurav's Open-Source API</p>
       </footer>
     </div>
   );
