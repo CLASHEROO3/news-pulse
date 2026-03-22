@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import NewsBoard from './Components/NewsBoard';
+import NewsBoard from './Components/NewsBoard'; // Notice the Capital 'C'
 
 function App() {
   const [selectedCats, setSelectedCats] = useState(["general"]);
@@ -12,11 +12,8 @@ function App() {
 
   useEffect(() => {
     const saved = localStorage.getItem('newspulse_config');
-    if (!saved) {
-      setShowOnboarding(true);
-    } else {
-      setSelectedCats(JSON.parse(saved));
-    }
+    if (!saved) setShowOnboarding(true);
+    else setSelectedCats(JSON.parse(saved));
   }, []);
 
   const toggleCategory = (cat) => {
@@ -40,7 +37,7 @@ function App() {
           <div className="modal-box">
             <img src="/logo.png" alt="Logo" style={{height:'60px', marginBottom:'20px'}} />
             <h2>Personalize NewsPulse</h2>
-            <p>Select topics for your <b>"For You"</b> feed.</p>
+            <p>Select your interests for a custom <b>"For You"</b> feed.</p>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
                 <button key={cat} className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} onClick={() => toggleCategory(cat)}>
@@ -69,7 +66,7 @@ function App() {
 
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h3>Region Settings</h3>
+          <h3>Settings</h3>
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
@@ -89,7 +86,7 @@ function App() {
       <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} />
       
       <footer className="footer-final">
-        <p>© 2024 NewsPulse Aggregator | Built with React</p>
+        <p>© 2024 NewsPulse Aggregator | Bharat Edition</p>
       </footer>
     </div>
   );

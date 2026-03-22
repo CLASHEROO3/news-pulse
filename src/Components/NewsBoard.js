@@ -32,14 +32,13 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
 
   return (
     <div>
-      {loading ? <div className="spinner-center" style={{margin:'100px auto', width:'40px', height:'40px', border:'4px solid #ddd', borderTopColor:'#c59235', borderRadius:'50%', animation:'spin 1s linear infinite'}}></div> : (
+      {loading ? <div className="spinner-center"></div> : (
         <div className="news-container">
           {articles.map((news, i) => (
             <NewsItem key={i} title={news.title} description={news.description} urlToImage={news.urlToImage} url={news.url} sourceName={news.source.name} publishedAt={news.publishedAt} />
           ))}
         </div>
       )}
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 };

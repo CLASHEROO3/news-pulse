@@ -20,8 +20,8 @@ const NewsItem = ({ title, description, urlToImage, url, sourceName, publishedAt
       </div>
       <div className="card-body">
         <div className="card-time">⏱ {getPreciseTime(publishedAt)}</div>
-        <h3>{title ? title.slice(0, 65) : "Headline Loading..."}</h3>
-        <p>{description ? description.slice(0, 95) : "Full details available in the article linked below."}...</p>
+        <h3>{title ? title.slice(0, 65) : "Headline..."}</h3>
+        <p>{description ? description.slice(0, 95) : "Read full coverage below."}...</p>
         <a href={url} target="_blank" rel="noreferrer" className="read-btn">Read Full Story</a>
       </div>
     </div>
