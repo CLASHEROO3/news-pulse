@@ -6,12 +6,17 @@ const NewsItem = ({ title, description, src, url, source }) => {
   return (
     <div className="news-card">
       <div className="image-container">
-        <img src={src ? src : defaultImg} className="news-image" alt="news" onError={(e) => { e.target.src = defaultImg; }} />
-        <span className="source-badge">{source || "Trending"}</span>
+        <img 
+          src={src ? src : defaultImg} 
+          className="news-image" 
+          alt="news" 
+          onError={(e) => { e.target.src = defaultImg; }} 
+        />
+        <span className="source-badge">{source || "News"}</span>
       </div>
       <div className="news-content">
-        <h3>{title ? title.slice(0, 75) : "Headline Loading..."}...</h3>
-        <p>{description ? description.slice(0, 110) : "Stay informed with the latest updates on this story. Click below for full coverage."}...</p>
+        <h3>{title ? title.slice(0, 70) : "Latest Update"}...</h3>
+        <p>{description ? description.slice(0, 100) : "Stay informed with the latest updates. Click below to read the full story."}...</p>
       </div>
       <a href={url} target="_blank" rel="noreferrer" className="news-btn">Read More</a>
     </div>

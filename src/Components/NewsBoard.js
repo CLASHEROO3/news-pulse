@@ -8,12 +8,12 @@ const NewsBoard = ({ category, country }) => {
 
   useEffect(() => {
     setLoading(true);
+    // Saurav's API is key-less and works on Vercel
     const url = `https://saurav.tech/NewsAPI/top-headlines/category/${category}/${country}.json`;
 
     axios.get(url)
       .then(response => {
-        const cleanData = response.data.articles.filter(item => item.title && item.url);
-        setArticles(cleanData.slice(0, 24));
+        setArticles(response.data.articles.slice(0, 24));
         setLoading(false);
       })
       .catch(() => setLoading(false));
