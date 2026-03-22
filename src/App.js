@@ -3,7 +3,8 @@ import './App.css';
 import NewsBoard from './Components/NewsBoard';
 
 function App() {
-  const [selectedCats, setSelectedCats] = useState(["general"]);
+  const [selectedCats, setSelectedCats] = useState(["general"]); // For the "For You" feed
+  const [activeView, setActiveView] = useState("for-you"); // Tracks what the user is looking at
   const [country, setCountry] = useState("in");
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,17 +29,18 @@ function App() {
   const saveAndExit = () => {
     localStorage.setItem('newspulse_config', JSON.stringify(selectedCats));
     setShowOnboarding(false);
+    setActiveView("for-you"); // Switch to customized feed after saving
   };
 
   return (
     <div className="App">
-      {/* 1. Onboarding Modal */}
+      {/* 1. Onboarding / Customization Modal */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
             <img src="/logo.png" alt="Logo" className="modal-logo" />
-            <h2>Personalize Your Feed</h2>
-            <p>Select multiple topics to create your custom news stream.</p>
+            <h2>Personalize NewsPulse</h2>
+            <p>Select the topics you want in your <b>"For You"</b> feed.</p>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
                 <button 
@@ -50,7 +52,7 @@ function App() {
                 </button>
               ))}
             </div>
-            <button className="save-btn" onClick={saveAndExit}>Start Reading</button>
+            <button className="save-btn" onClick={saveAndExit}>Apply Preferences</button>
           </div>
         </div>
       )}
@@ -70,28 +72,47 @@ function App() {
         </div>
       </nav>
 
-      {/* 3. Hidden Sidebar Drawer */}
+      {/* 3. Sidebar Drawer */}
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h3>Switch Region</h3>
+          <h3>Region Settings</h3>
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
-          <button className={country === 'in' ? 'active' : ''} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>India News</button>
-          <button className={country === 'us' ? 'active' : ''} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>Global News</button>
+          <button className={country === 'in' ? 'active' : ''} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>India Edition</button>
+          <button className={country === 'us' ? 'active' : ''} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>Global Edition</button>
         </div>
       </div>
       {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
 
-      {/* 4. Content */}
-      <div className="active-filters-bar">
-        {selectedCats.map(c => <span key={c} className="tag">#{c}</span>)}
+      {/* 4. Sub-Navigation (The Tab Switcher) */}
+      <div className="sub-nav">
+        <button 
+          className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} 
+          onClick={() => setActiveView('for-you')}
+        >
+          ★ For You
+        </button>
+        {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
+          <button 
+            key={cat} 
+            className={`sub-nav-item ${activeView === cat ? 'active' : ''}`} 
+            onClick={() => setActiveView(cat)}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
       
-      <NewsBoard selectedCats={selectedCats} country={country} />
+      {/* 5. Main Feed */}
+      <NewsBoard 
+        activeView={activeView} 
+        selectedCats={selectedCats} 
+        country={country} 
+      />
       
       <footer className="footer-final">
-        <p>© 2024 NewsPulse Aggregator | Bharat Edition</p>
+        <p>© 2024 NewsPulse | High-Performance News Aggregator</p>
       </footer>
     </div>
   );
