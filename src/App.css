@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
 :root {
-  --primary-gold: #c59235; /* Gold from your logo */
-  --dark-navy: #0a192f;   /* Dark Blue from your logo */
-  --light-gray: #f8fafc;
+  --primary-gold: #c59235; 
+  --dark-navy: #0a192f;   
+  /* Soft Cream Colors */
+  --cream-bg: #fdfaf1;    
+  --cream-card: #fffefc;
+  --cream-border: #e8e2d5;
 }
 
 * { box-sizing: border-box; }
@@ -11,10 +14,15 @@
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background-color: var(--light-gray);
+  /* Applying the Cream Background */
+  background-color: var(--cream-bg);
+  /* Adding a subtle CSS Texture (Tiny Dots) */
+  background-image: radial-gradient(#d1cdc2 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+  color: var(--dark-navy);
 }
 
-/* NAVBAR - Professional & Compact */
+/* NAVBAR - Stays Navy to make the logo look integrated */
 .navbar {
   background: var(--dark-navy);
   padding: 0.8rem 10%;
@@ -25,34 +33,23 @@ body {
   top: 0;
   z-index: 1000;
   color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* THIS FIXES THE HUGE LOGO ISSUE */
-.nav-logo {
-  height: 45px; 
-  width: auto;
-  object-fit: contain;
-}
-
+.logo-section { display: flex; align-items: center; gap: 12px; }
+.nav-logo { height: 45px; width: auto; object-fit: contain; }
 .logo-text { font-size: 1.5rem; font-weight: 800; color: white; }
 .logo-text span { color: var(--primary-gold); }
-
 .date-display { font-weight: 600; color: #94a3b8; font-size: 0.85rem; }
 
-/* TABS */
+/* TABS - Now using Cream tint */
 .news-tabs {
   display: flex;
   justify-content: center;
   gap: 2rem;
-  background: #fff;
+  background: var(--cream-card);
   padding: 1rem 0;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--cream-border);
 }
 
 .tab-btn {
@@ -61,8 +58,9 @@ body {
   background: none;
   font-weight: 700;
   cursor: pointer;
-  color: #94a3b8;
+  color: #8c887d;
   border-bottom: 3px solid transparent;
+  transition: 0.3s;
 }
 
 .tab-btn.active {
@@ -83,10 +81,11 @@ body {
   padding: 8px 20px;
   border-radius: 30px;
   border: 1px solid var(--dark-navy);
-  background: white;
+  background: var(--cream-card);
   cursor: pointer;
   font-weight: 600;
   text-transform: capitalize;
+  color: var(--dark-navy);
 }
 
 .cat-btn.active {
@@ -94,26 +93,33 @@ body {
   color: var(--primary-gold);
 }
 
-/* NEWS GRID - Fixes the giant image issue */
+/* NEWS GRID */
 .news-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
+  gap: 2.5rem;
   padding: 1rem 10% 5rem 10%;
 }
 
+/* NEWS CARDS - Soft Cream tint with better shadow */
 .news-card {
-  background: white;
+  background: var(--cream-card);
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--cream-border);
   display: flex;
   flex-direction: column;
-  height: 100%;
+  transition: all 0.3s ease;
 }
 
-.image-container { width: 100%; height: 200px; position: relative; background: #000; overflow: hidden; }
-.news-image { width: 100%; height: 200px; object-fit: cover; }
+.news-card:hover { 
+  transform: translateY(-8px); 
+  box-shadow: 0 15px 30px rgba(10, 25, 47, 0.1); 
+  border-color: var(--primary-gold);
+}
+
+.image-container { width: 100%; height: 200px; position: relative; background: #000; }
+.news-image { width: 100%; height: 100%; object-fit: cover; opacity: 0.95; }
 
 .source-badge {
   position: absolute; top: 12px; left: 12px;
@@ -123,20 +129,30 @@ body {
 }
 
 .news-content { padding: 1.5rem; flex-grow: 1; }
-.news-content h3 { font-size: 1.1rem; margin-bottom: 10px; line-height: 1.4; color: var(--dark-navy); }
-.news-content p { font-size: 0.9rem; color: #64748b; line-height: 1.5; }
+.news-content h3 { font-size: 1.15rem; margin-bottom: 10px; line-height: 1.4; color: var(--dark-navy); }
+.news-content p { font-size: 0.92rem; color: #5c5952; line-height: 1.6; }
 
 .news-btn {
   display: block; text-align: center; background: var(--dark-navy);
   color: var(--primary-gold); text-decoration: none; padding: 1rem;
-  font-weight: 700;
+  font-weight: 700; transition: 0.3s;
 }
 
+.news-btn:hover { background: var(--primary-gold); color: var(--dark-navy); }
+
 /* FOOTER */
-.footer { text-align: center; padding: 3rem; background: var(--dark-navy); color: white; margin-top: 2rem; }
+.footer { 
+  text-align: center; 
+  padding: 4rem; 
+  background: var(--dark-navy); 
+  color: var(--primary-gold); 
+  border-top: 4px solid var(--primary-gold);
+}
+
+.footer p { color: #94a3b8; font-size: 0.9rem; }
 
 .spinner {
-  border: 4px solid rgba(0,0,0,0.1); width: 40px; height: 40px;
+  border: 4px solid rgba(197, 146, 53, 0.1); width: 40px; height: 40px;
   border-radius: 50%; border-left-color: var(--primary-gold);
   animation: spin 1s linear infinite; margin: 100px auto;
 }
