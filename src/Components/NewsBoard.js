@@ -8,7 +8,7 @@ const NewsBoard = ({ category, country }) => {
 
   useEffect(() => {
     setLoading(true);
-    // Saurav's API is key-less and works on Vercel
+    // Open-source API that works on Vercel
     const url = `https://saurav.tech/NewsAPI/top-headlines/category/${category}/${country}.json`;
 
     axios.get(url)
@@ -26,7 +26,14 @@ const NewsBoard = ({ category, country }) => {
       ) : (
         <div className="news-container">
           {articles.map((news, index) => (
-              <NewsItem key={index} title={news.title} description={news.description} src={news.urlToImage} url={news.url} source={news.source.name} />
+              <NewsItem 
+                key={index} 
+                title={news.title} 
+                description={news.description} 
+                src={news.urlToImage} 
+                url={news.url} 
+                source={news.source.name} 
+              />
           ))}
         </div>
       )}
