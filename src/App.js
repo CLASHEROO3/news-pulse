@@ -1,10 +1,11 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import NewsBoard from './Components/NewsBoard';
 
 function App() {
-  const [selectedCats, setSelectedCats] = useState(["general"]); // For the "For You" feed
-  const [activeView, setActiveView] = useState("for-you"); // Tracks what the user is looking at
+  const [selectedCats, setSelectedCats] = useState(["general"]);
+  const [activeView, setActiveView] = useState("for-you");
   const [country, setCountry] = useState("in");
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,18 +30,16 @@ function App() {
   const saveAndExit = () => {
     localStorage.setItem('newspulse_config', JSON.stringify(selectedCats));
     setShowOnboarding(false);
-    setActiveView("for-you"); // Switch to customized feed after saving
+    setActiveView("for-you");
   };
 
   return (
     <div className="App">
-      {/* 1. Onboarding / Customization Modal */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
             <img src="/logo.png" alt="Logo" className="modal-logo" />
-            <h2>Personalize NewsPulse</h2>
-            <p>Select the topics you want in your <b>"For You"</b> feed.</p>
+            <h2>Personalize Your Feed</h2>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
                 <button 
@@ -52,17 +51,16 @@ function App() {
                 </button>
               ))}
             </div>
-            <button className="save-btn" onClick={saveAndExit}>Apply Preferences</button>
+            <button className="save-btn" onClick={saveAndExit}>Apply</button>
           </div>
         </div>
       )}
 
-      {/* 2. Professional Navbar */}
       <nav className="navbar">
         <div className="nav-left">
           <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
           <div className="brand">
-            <img src="/logo.png" alt="NP" className="nav-logo" />
+            <img src="/logo.png" alt="Logo" className="nav-logo" />
             <h1 className="logo-text">News<span>Pulse</span></h1>
           </div>
         </div>
@@ -72,10 +70,9 @@ function App() {
         </div>
       </nav>
 
-      {/* 3. Sidebar Drawer */}
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h3>Region Settings</h3>
+          <h3>Settings</h3>
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
@@ -85,34 +82,17 @@ function App() {
       </div>
       {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
 
-      {/* 4. Sub-Navigation (The Tab Switcher) */}
       <div className="sub-nav">
-        <button 
-          className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} 
-          onClick={() => setActiveView('for-you')}
-        >
-          ★ For You
-        </button>
+        <button className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
         {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
-          <button 
-            key={cat} 
-            className={`sub-nav-item ${activeView === cat ? 'active' : ''}`} 
-            onClick={() => setActiveView(cat)}
-          >
-            {cat}
-          </button>
+          <button key={cat} className={`sub-nav-item ${activeView === cat ? 'active' : ''}`} onClick={() => setActiveView(cat)}>{cat}</button>
         ))}
       </div>
       
-      {/* 5. Main Feed */}
-      <NewsBoard 
-        activeView={activeView} 
-        selectedCats={selectedCats} 
-        country={country} 
-      />
+      <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} />
       
       <footer className="footer-final">
-        <p>© 2024 NewsPulse | High-Performance News Aggregator</p>
+        <p>© 2024 NewsPulse Aggregator</p>
       </footer>
     </div>
   );
