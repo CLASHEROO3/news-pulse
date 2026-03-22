@@ -8,7 +8,7 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 1. First Visit Check
+  // Check if first time visitor
   useEffect(() => {
     const hasVisited = localStorage.getItem('newspulse_visited');
     if (!hasVisited) {
@@ -16,28 +16,27 @@ function App() {
     }
   }, []);
 
-  // 2. Save Preferences
+  // Update Tab Title
+  useEffect(() => {
+    const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+    document.title = `NewsPulse | ${cap(category)} News`;
+  }, [category]);
+
   const handleCustomization = (selectedCat) => {
     setCategory(selectedCat);
     localStorage.setItem('newspulse_visited', 'true');
     setShowOnboarding(false);
   };
 
-  // 3. Dynamic Title
-  useEffect(() => {
-    const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-    document.title = `NewsPulse | ${cap(category)} News`;
-  }, [category]);
-
   return (
     <div className="App">
-      {/* Onboarding Modal (The Popup) */}
+      {/* Onboarding Modal */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
             <img src="/logo.png" alt="Logo" style={{height: '50px'}} />
             <h2>Welcome to NewsPulse</h2>
-            <p>What news interests you the most today?</p>
+            <p>What news interests you the most?</p>
             <div className="onboarding-options">
               {["technology", "business", "sports", "health"].map(cat => (
                 <button key={cat} onClick={() => handleCustomization(cat)} className="cat-btn">
@@ -50,10 +49,10 @@ function App() {
         </div>
       )}
 
-      {/* Navbar with Menu Toggle */}
+      {/* Navbar */}
       <nav className="navbar">
         <div className="logo-section">
-          <button className="menu-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>☰</button>
+          <button className="menu-toggle" onClick={() => setIsMenuOpen(true)}>☰</button>
           <img src="/logo.png" alt="NP" className="nav-logo" />
           <div className="logo-text">News<span>Pulse</span></div>
         </div>
@@ -63,7 +62,7 @@ function App() {
       {/* Sidebar Menu */}
       <div className={`sidebar ${isMenuOpen ? 'open' : ''}`}>
         <button className="close-sidebar" onClick={() => setIsMenuOpen(false)}>×</button>
-        <h3>Categories</h3>
+        <h3 style={{color: '#c59235', marginBottom: '20px'}}>Categories</h3>
         {["general", "technology", "business", "sports", "entertainment", "health"].map((cat) => (
           <button 
             key={cat} 
