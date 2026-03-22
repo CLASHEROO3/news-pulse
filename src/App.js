@@ -6,10 +6,10 @@ function App() {
   const [category, setCategory] = useState("general");
   const [country, setCountry] = useState("in");
 
-  // DYNAMIC TAB TITLE LOGIC
+  // THIS FORCES THE TAB TITLE TO CHANGE DYNAMICALLY
   useEffect(() => {
-    const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-    document.title = `NewsPulse | ${capitalize(category)} News`;
+    const capitalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+    document.title = `NewsPulse | ${capitalizedCategory}`;
   }, [category]);
 
   return (
@@ -34,7 +34,7 @@ function App() {
 
       <footer className="footer">
         <p><strong>NewsPulse Aggregator</strong></p>
-        <p>A Final Year Engineering Project | © 2024</p>
+        <p>A Professional College Project | © 2024</p>
       </footer>
     </div>
   );
