@@ -6,6 +6,7 @@ import NewsItem from './NewsItem';
 const NewsBoard = ({ activeView, selectedCats, country }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedArticle, setSelectedArticle] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,9 +22,8 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
           allArticles = res.data.articles || [];
         }
 
-        // Remove duplicates
+        allArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
         const unique = Array.from(new Set(allArticles.map(a => a.url))).map(url => allArticles.find(a => a.url === url));
-        
         setArticles(unique.slice(0, 40));
         setLoading(false);
       } catch (e) { setLoading(false); }
@@ -33,17 +33,34 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
 
   return (
     <div>
+      {/* IN-APP READER OVERLAY */}
+      {selectedArticle && (
+        <div className="reader-overlay">
+          <div className="reader-content">
+            <button className="close-reader" onClick={() => setSelectedArticle(null)}>× Close Reader</button>
+            <img src={selectedArticle.urlToImage} alt="news" className="reader-img" />
+            <div className="reader-text-box">
+              <span className="reader-source">{selectedArticle.source.name}</span>
+              <h1>{selectedArticle.title}</h1>
+              <p className="reader-desc">{selectedArticle.description}</p>
+              <p className="reader-full-text">
+                {selectedArticle.content || "Summary: This reported story from " + selectedArticle.source.name + " is currently developing. NewsPulse is aggregating live data to provide the most accurate updates. To view the full multimedia report, please use the link below."}
+              </p>
+              <a href={selectedArticle.url} target="_blank" rel="noreferrer" className="source-link">View Original Official Source →</a>
+            </div>
+          </div>
+        </div>
+      )}
+
       {loading ? <div className="spinner-center"></div> : (
         <div className="news-container">
           {articles.map((news, i) => (
             <NewsItem 
               key={i} 
-              index={i} // VERY IMPORTANT: Pass the index i here
-              title={news.title} 
-              description={news.description} 
-              urlToImage={news.urlToImage} 
-              url={news.url} 
+              index={i} 
+              {...news} 
               sourceName={news.source.name} 
+              onReadMore={() => setSelectedArticle(news)} 
             />
           ))}
         </div>
