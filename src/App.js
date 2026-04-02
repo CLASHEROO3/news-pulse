@@ -32,13 +32,12 @@ function App() {
 
   return (
     <div className="App">
-      {/* 1. Onboarding Modal */}
+      {/* Onboarding Modal */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="Logo" className="modal-logo" />
+            <img src="/logo.png" alt="Logo" style={{height:'60px', marginBottom:'20px'}} />
             <h2>Personalize Your Feed</h2>
-            <p>Select the topics you want in your <b>"For You"</b> stream.</p>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
                 <button key={cat} className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} onClick={() => toggleCategory(cat)}>
@@ -51,36 +50,40 @@ function App() {
         </div>
       )}
 
-      {/* 2. Navbar */}
+      {/* Navbar with Fixed Alignment */}
       <nav className="navbar">
         <div className="nav-left">
           <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
-          <div className="brand">
-            <img src="/logo.png" alt="NP" className="nav-logo" />
+          <div className="brand" style={{display:'flex', alignItems:'center', gap:'10px'}}>
+            <img src="/logo.png" alt="Logo" className="nav-logo" />
             <h1 className="logo-text">News<span>Pulse</span></h1>
           </div>
         </div>
+        
         <div className="nav-right">
-          <button className="customize-btn" onClick={() => setShowOnboarding(true)}>⚙ Customize</button>
-          <span className="nav-date">{new Date().toLocaleDateString('en-IN', {month:'short', day:'numeric'})}</span>
+          <button className="customize-btn" onClick={() => setShowOnboarding(true)}>
+            <span>⚙</span> Customize
+          </button>
+          <span className="nav-date">
+            {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+          </span>
         </div>
       </nav>
 
-      {/* 3. Sidebar Drawer */}
+      {/* Sidebar */}
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h3>Settings</h3>
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
-          <p className="sidebar-label">Region</p>
-          <button className={country === 'in' ? 'active' : ''} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>India Edition</button>
-          <button className={country === 'us' ? 'active' : ''} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>Global Edition</button>
+          <button className={country === 'in' ? 'active' : ''} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>🇮🇳 India Edition</button>
+          <button className={country === 'us' ? 'active' : ''} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>🌎 Global Edition</button>
         </div>
       </div>
       {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
 
-      {/* 4. Sub-Navigation */}
+      {/* Sub Nav */}
       <div className="sub-nav">
         <button className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
         {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
