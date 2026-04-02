@@ -35,9 +35,9 @@ function App() {
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="Logo" className="modal-logo" />
-            <h2>Personalize Your Feed</h2>
-            <p>Select topics you love to build your <b>"For You"</b> feed.</p>
+            <img src="/logo.png" alt="Logo" style={{height:'60px', marginBottom:'20px'}} />
+            <h2>Personalize NewsPulse</h2>
+            <p>Select topics to curate your <b>"For You"</b> feed.</p>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
                 <button key={cat} className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} onClick={() => toggleCategory(cat)}>
@@ -45,7 +45,7 @@ function App() {
                 </button>
               ))}
             </div>
-            <button className="save-btn" onClick={saveAndExit}>Start Reading</button>
+            <button className="save-btn" onClick={saveAndExit}>Apply Preferences</button>
           </div>
         </div>
       )}
@@ -60,13 +60,14 @@ function App() {
         </div>
         <div className="nav-right">
           <button className="customize-btn" onClick={() => setShowOnboarding(true)}>⚙ Customize</button>
+          {/* Using current date for real-time feel */}
           <span className="nav-date">{new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>
         </div>
       </nav>
 
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h3>Region Settings</h3>
+          <h3>Settings</h3>
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
@@ -86,7 +87,7 @@ function App() {
       <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} />
       
       <footer className="footer-final">
-        <p>© 2024 NewsPulse Aggregator | Bharat Edition</p>
+        <p>© {new Date().getFullYear()} NewsPulse Aggregator | Bharat Edition</p>
       </footer>
     </div>
   );

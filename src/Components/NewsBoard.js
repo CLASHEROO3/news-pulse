@@ -21,12 +21,8 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
           allArticles = res.data.articles || [];
         }
 
-        // Sort by Time (Newest First)
-        allArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-        
-        // Remove duplicates
+        // Remove duplicates and limit to 40
         const unique = Array.from(new Set(allArticles.map(a => a.url))).map(url => allArticles.find(a => a.url === url));
-        
         setArticles(unique.slice(0, 40));
         setLoading(false);
       } catch (e) { setLoading(false); }
@@ -39,7 +35,15 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
       {loading ? <div className="spinner-center"></div> : (
         <div className="news-container">
           {articles.map((news, i) => (
-            <NewsItem key={i} {...news} sourceName={news.source.name} />
+            <NewsItem 
+                key={i} 
+                index={i}  // PASSING THE INDEX HERE
+                title={news.title} 
+                description={news.description} 
+                urlToImage={news.urlToImage} 
+                url={news.url} 
+                sourceName={news.source.name} 
+            />
           ))}
         </div>
       )}
