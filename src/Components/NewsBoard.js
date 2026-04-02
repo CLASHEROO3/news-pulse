@@ -21,8 +21,9 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
           allArticles = res.data.articles || [];
         }
 
-        // Remove duplicates and limit to 40
+        // Remove duplicates
         const unique = Array.from(new Set(allArticles.map(a => a.url))).map(url => allArticles.find(a => a.url === url));
+        
         setArticles(unique.slice(0, 40));
         setLoading(false);
       } catch (e) { setLoading(false); }
@@ -36,13 +37,13 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
         <div className="news-container">
           {articles.map((news, i) => (
             <NewsItem 
-                key={i} 
-                index={i}  // PASSING THE INDEX HERE
-                title={news.title} 
-                description={news.description} 
-                urlToImage={news.urlToImage} 
-                url={news.url} 
-                sourceName={news.source.name} 
+              key={i} 
+              index={i} // VERY IMPORTANT: Pass the index i here
+              title={news.title} 
+              description={news.description} 
+              urlToImage={news.urlToImage} 
+              url={news.url} 
+              sourceName={news.source.name} 
             />
           ))}
         </div>
