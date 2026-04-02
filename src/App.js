@@ -32,7 +32,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* Onboarding Modal */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -45,12 +44,11 @@ function App() {
                 </button>
               ))}
             </div>
-            <button className="save-btn" onClick={saveAndExit}>Apply Preferences</button>
+            <button className="save-btn" onClick={saveAndExit}>Start Reading</button>
           </div>
         </div>
       )}
 
-      {/* Navbar with Fixed Alignment */}
       <nav className="navbar">
         <div className="nav-left">
           <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
@@ -59,31 +57,36 @@ function App() {
             <h1 className="logo-text">News<span>Pulse</span></h1>
           </div>
         </div>
-        
         <div className="nav-right">
-          <button className="customize-btn" onClick={() => setShowOnboarding(true)}>
-            <span>⚙</span> Customize
-          </button>
-          <span className="nav-date">
-            {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
-          </span>
+          <button className="customize-btn" onClick={() => setShowOnboarding(true)}>⚙ Customize</button>
+          <span className="nav-date">{new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'})}</span>
         </div>
       </nav>
 
-      {/* Sidebar */}
+      {/* FIXED SIDEBAR DRAWER */}
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h3>Settings</h3>
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
-          <button className={country === 'in' ? 'active' : ''} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>🇮🇳 India Edition</button>
-          <button className={country === 'us' ? 'active' : ''} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>🌎 Global Edition</button>
+          <span className="sidebar-label">Regional Edition</span>
+          <button 
+            className={`region-btn ${country === 'in' ? 'active' : ''}`} 
+            onClick={() => {setCountry('in'); setIsMenuOpen(false);}}
+          >
+            🇮🇳 India Edition
+          </button>
+          <button 
+            className={`region-btn ${country === 'us' ? 'active' : ''}`} 
+            onClick={() => {setCountry('us'); setIsMenuOpen(false);}}
+          >
+            🌎 Global Edition
+          </button>
         </div>
       </div>
       {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
 
-      {/* Sub Nav */}
       <div className="sub-nav">
         <button className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
         {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
@@ -93,7 +96,7 @@ function App() {
       
       <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} />
       
-      <footer className="footer-final">
+      <footer className="footer-final" style={{textAlign:'center', padding:'3rem', background:'var(--navy)', color:'var(--gold)', marginTop:'2rem'}}>
         <p>© {new Date().getFullYear()} NewsPulse Aggregator | Bharat Edition</p>
       </footer>
     </div>
