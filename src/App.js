@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import NewsBoard from './Components/NewsBoard'; // Notice the Capital 'C'
+import NewsBoard from './Components/NewsBoard';
 
 function App() {
   const [selectedCats, setSelectedCats] = useState(["general"]);
@@ -35,9 +35,9 @@ function App() {
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="Logo" style={{height:'60px', marginBottom:'20px'}} />
-            <h2>Personalize NewsPulse</h2>
-            <p>Select your interests for a custom <b>"For You"</b> feed.</p>
+            <img src="/logo.png" alt="Logo" className="modal-logo" />
+            <h2>Personalize Your Feed</h2>
+            <p>Select topics you love to build your <b>"For You"</b> feed.</p>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
                 <button key={cat} className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} onClick={() => toggleCategory(cat)}>
@@ -60,13 +60,13 @@ function App() {
         </div>
         <div className="nav-right">
           <button className="customize-btn" onClick={() => setShowOnboarding(true)}>⚙ Customize</button>
-          <span className="nav-date">{new Date().toDateString()}</span>
+          <span className="nav-date">{new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>
         </div>
       </nav>
 
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h3>Settings</h3>
+          <h3>Region Settings</h3>
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
