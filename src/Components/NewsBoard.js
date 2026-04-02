@@ -8,6 +8,12 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
   const [loading, setLoading] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState(null);
 
+  // Disable body scroll when reader is open
+  useEffect(() => {
+    if (selectedArticle) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'auto';
+  }, [selectedArticle]);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -21,7 +27,6 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
           const res = await axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${activeView}/${country}.json`);
           allArticles = res.data.articles || [];
         }
-
         allArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
         const unique = Array.from(new Set(allArticles.map(a => a.url))).map(url => allArticles.find(a => a.url === url));
         setArticles(unique.slice(0, 40));
@@ -33,10 +38,9 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
 
   return (
     <div>
-      {/* IN-APP READER OVERLAY */}
       {selectedArticle && (
-        <div className="reader-overlay">
-          <div className="reader-content">
+        <div className="reader-overlay" onClick={() => setSelectedArticle(null)}>
+          <div className="reader-content" onClick={(e) => e.stopPropagation()}>
             <button className="close-reader" onClick={() => setSelectedArticle(null)}>× Close Reader</button>
             <img src={selectedArticle.urlToImage} alt="news" className="reader-img" />
             <div className="reader-text-box">
@@ -44,27 +48,22 @@ const NewsBoard = ({ activeView, selectedCats, country }) => {
               <h1>{selectedArticle.title}</h1>
               <p className="reader-desc">{selectedArticle.description}</p>
               <p className="reader-full-text">
-                {selectedArticle.content || "Summary: This reported story from " + selectedArticle.source.name + " is currently developing. NewsPulse is aggregating live data to provide the most accurate updates. To view the full multimedia report, please use the link below."}
+                {selectedArticle.content || "NewsPulse AI Summary: This developing story from " + selectedArticle.source.name + " provides key updates on the current situation. Our aggregator has compiled this summary for a quick read. For the full experience including videos and live commentary, please use the button below to visit the official broadcaster."}
               </p>
-              <a href={selectedArticle.url} target="_blank" rel="noreferrer" className="source-link">View Original Official Source →</a>
+              <a href={selectedArticle.url} target="_blank" rel="noreferrer" className="source-link">View Full Official Article →</a>
             </div>
           </div>
         </div>
       )}
 
-      {loading ? <div className="spinner-center"></div> : (
+      {loading ? <div className="spinner-center" style={{margin:'100px auto', width:'40px', height:'40px', border:'4px solid #ddd', borderTopColor:'#c59235', borderRadius:'50%', animation:'spin 1s linear infinite'}}></div> : (
         <div className="news-container">
           {articles.map((news, i) => (
-            <NewsItem 
-              key={i} 
-              index={i} 
-              {...news} 
-              sourceName={news.source.name} 
-              onReadMore={() => setSelectedArticle(news)} 
-            />
+            <NewsItem key={i} index={i} {...news} sourceName={news.source.name} onReadMore={() => setSelectedArticle(news)} />
           ))}
         </div>
       )}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 };
