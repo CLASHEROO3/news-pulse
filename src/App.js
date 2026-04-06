@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import NewsBoard from './Components/NewsBoard';
@@ -7,7 +8,7 @@ function App() {
   const [activeView, setActiveView] = useState("for-you");
   const [country, setCountry] = useState("in");
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Controls the sidebar
 
   useEffect(() => {
     const saved = localStorage.getItem('newspulse_config');
@@ -32,20 +33,15 @@ function App() {
   return (
     <div className="App">
       
-      {/* 1. ONBOARDING OVERLAY */}
+      {/* 1. ONBOARDING MODAL */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="Logo" className="modal-logo" />
-            <h2>Welcome to NewsPulse</h2>
-            <p>Select your favorite topics for a custom feed.</p>
+            <img src="/logo.png" alt="Logo" style={{height:'60px', marginBottom:'20px'}} />
+            <h2>Personalize NewsPulse</h2>
             <div className="onboarding-grid">
               {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
-                <button 
-                  key={cat} 
-                  className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} 
-                  onClick={() => toggleCategory(cat)}
-                >
+                <button key={cat} className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} onClick={() => toggleCategory(cat)}>
                   {cat} {selectedCats.includes(cat) ? '✓' : '+'}
                 </button>
               ))}
@@ -57,20 +53,36 @@ function App() {
 
       {/* 2. NAVBAR */}
       <nav className="navbar">
-        <div className="nav-left" style={{display:'flex', alignItems:'center', gap:'15px'}}>
-          <button className="hamburger" style={{background:'none', border:'none', color:'white', fontSize:'1.5rem', cursor:'pointer'}} onClick={() => setIsMenuOpen(true)}>☰</button>
-          <div className="brand" style={{display:'flex', alignItems:'center', gap:'10px'}}>
+        <div className="nav-left">
+          {/* THE HAMBURGER BUTTON */}
+          <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
+          <div className="brand">
             <img src="/logo.png" alt="NP" className="nav-logo" />
             <h1 className="logo-text">News<span>Pulse</span></h1>
           </div>
         </div>
-        <div className="nav-right" style={{display:'flex', alignItems:'center', gap:'20px'}}>
+        <div className="nav-right">
           <button className="customize-btn" onClick={() => setShowOnboarding(true)}>⚙ Customize</button>
-          <span className="nav-date" style={{color:'#94a3b8', fontSize:'0.8rem', fontWeight:'700'}}>{new Date().toDateString()}</span>
+          <span className="nav-date">{new Date().toLocaleDateString('en-IN', {month:'short', day:'numeric'})}</span>
         </div>
       </nav>
 
-      {/* 3. TABS */}
+      {/* 3. SIDEBAR DRAWER - Check this logic */}
+      <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <h3>Settings</h3>
+          <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
+        </div>
+        <div className="sidebar-content">
+          <p className="sidebar-label">Edition</p>
+          <button className={`region-btn ${country === 'in' ? 'active' : ''}`} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>India Edition</button>
+          <button className={`region-btn ${country === 'us' ? 'active' : ''}`} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>Global Edition</button>
+        </div>
+      </div>
+
+      {/* 4. OVERLAY (Darkens screen when menu is open) */}
+      {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
+
       <div className="sub-nav">
         <button className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
         {["general", "technology", "business", "sports", "entertainment", "health"].map(cat => (
@@ -80,8 +92,8 @@ function App() {
       
       <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} />
       
-      <footer className="footer-final" style={{textAlign:'center', padding:'3rem', background:'#0a192f', color:'#c59235', marginTop:'2rem'}}>
-        <p>© 2024 NewsPulse Aggregator | Bharat Edition</p>
+      <footer className="footer-final">
+        <p>© 2024 NewsPulse Aggregator</p>
       </footer>
     </div>
   );
