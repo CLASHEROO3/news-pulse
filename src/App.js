@@ -7,7 +7,7 @@ import NewsBoard from './Components/NewsBoard';
 // --- DATABASE CONNECTION ---
 const supabase = createClient(
   'https://hmylzizegexlxcltpxfb.supabase.co', 
-  'PASTE_YOUR_ANON_KEY_HERE' 
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhteWx6aXplZ2V4bHhjbHRweGZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1Njg5NzgsImV4cCI6MjA5MTE0NDk3OH0.DAqG8sfCj9au1CSG3dchA7Em4wvS0m9C_PXR5QHjPKE' 
 );
 
 function App() {
