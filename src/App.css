@@ -1,57 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-:root { --gold: #c59235; --navy: #0a192f; --cream: #fdfaf1; --border: #e8e2d5; }
+/* MOBILE & SENTIMENT DESIGN */
+:root { --gold: #c59235; --navy: #0a192f; --cream: #fdfaf1; }
+body { background: var(--cream); margin: 0; font-family: sans-serif; overflow-x: hidden; }
 
-* { box-sizing: border-box; }
-body { margin: 0; font-family: 'Inter', sans-serif; background: var(--cream); overflow-x: hidden; }
-
-/* NAVBAR */
-.navbar { 
-  background: var(--navy); height: 75px; padding: 0 5%; display: flex; 
-  justify-content: space-between; align-items: center; position: sticky; 
-  top: 0; z-index: 1000; color: white; 
-}
-.nav-left, .brand { display: flex; align-items: center; gap: 15px; }
-.hamburger { background: none; border: none; color: white; font-size: 2rem; cursor: pointer; padding: 10px; }
-.nav-logo { height: 35px !important; width: auto !important; }
-.logo-text { color: white; margin: 0; font-size: 1.4rem; font-weight: 800; }
-.logo-text span { color: var(--gold); }
-.customize-btn { background: var(--gold); color: var(--navy); border: none; padding: 8px 15px; border-radius: 6px; font-weight: 800; cursor: pointer; }
-
-/* SIDEBAR DRAWER - FIXED */
-.sidebar-drawer {
-  position: fixed; top: 0; left: -320px; width: 300px; height: 100vh;
-  background: var(--navy); 
-  z-index: 2000; /* Higher than Navbar */
-  transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-  padding: 30px 20px;
-  box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-}
-.sidebar-drawer.open { left: 0; }
-.sidebar-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold); margin-bottom: 20px; color: white; padding-bottom: 10px; }
-.close-btn { background: none; border: 1px solid var(--gold); color: var(--gold); font-size: 1.5rem; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; }
-.sidebar-label { color: #94a3b8; text-transform: uppercase; font-size: 0.7rem; font-weight: 800; margin-bottom: 15px; display: block; }
-.region-btn { display: block; width: 100%; padding: 15px; text-align: left; background: none; border: 1px solid #1e293b; color: white; border-radius: 8px; margin-bottom: 10px; cursor: pointer; }
-.region-btn.active { background: var(--gold); color: var(--navy); font-weight: 800; }
-
-/* OVERLAY */
-.sidebar-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6); z-index: 1500;
-}
-
-/* SUB-NAV */
-.sub-nav { display: flex; gap: 10px; padding: 10px 5%; background: white; border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; position: sticky; top: 75px; z-index: 900; }
-.sub-nav-item { padding: 8px 20px; border-radius: 20px; border: none; background: none; font-weight: 700; color: #64748b; cursor: pointer; text-transform: capitalize; }
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 65px; background: var(--navy); color: white; position: sticky; top: 0; z-index: 1000; }
+.sub-nav { display: flex; overflow-x: auto; gap: 8px; padding: 10px; background: white; border-bottom: 1px solid #ddd; }
+.sub-nav::-webkit-scrollbar { display: none; }
+.sub-nav-item { padding: 8px 18px; border-radius: 20px; border: none; background: #eee; white-space: nowrap; font-weight: 700; font-size: 0.8rem; }
 .sub-nav-item.active { background: var(--navy); color: var(--gold); }
 
-/* NEWS GRID */
-.news-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 30px 5% 100px 5%; }
-.news-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); height: 480px; display: flex; flex-direction: column; transition: 0.3s; }
-.card-img-box { height: 180px; width: 100%; position: relative; background: #000; }
-.card-img-box img { width: 100%; height: 100%; object-fit: cover; }
-.card-badge { position: absolute; top: 12px; left: 12px; background: var(--gold); color: var(--navy); padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.7rem; }
-.card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-.card-time { font-size: 0.75rem; color: var(--gold); font-weight: 800; margin-bottom: 10px; }
-.read-btn { margin-top: auto; background: var(--navy); color: var(--gold); text-align: center; padding: 15px; text-decoration: none; font-weight: 800; border: none; cursor: pointer; }
+.news-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; padding: 15px; }
+.news-card { background: white; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #e8e2d5; }
+
+/* SENTIMENT BADGES */
+.sentiment-pill { position: absolute; top: 10px; right: 10px; padding: 3px 8px; border-radius: 5px; font-size: 0.6rem; font-weight: 900; color: white; text-transform: uppercase; z-index: 5; }
+.Urgent { background: #ef4444; } .Positive { background: #22c55e; } .Neutral { background: #64748b; }
 
 @media (max-width: 768px) { .news-container { grid-template-columns: 1fr; } .nav-date { display: none; } }
