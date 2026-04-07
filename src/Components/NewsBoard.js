@@ -23,24 +23,22 @@ const NewsBoard = ({ activeView, selectedCats, country, supabase, onUpdate }) =>
         if (activeView === "for-you") {
           const reqs = selectedCats.map(cat => axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${cat}/${country}.json`));
           const resps = await Promise.all(reqs);
-          resps.forEach(r => allArticles = [...allArticles, ...r.data.articles]);
+          resps.forEach(r => { if (r.data && r.data.articles) allArticles = [...allArticles, ...r.data.articles]; });
         } else {
           const res = await axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${activeView}/${country}.json`);
           allArticles = res.data.articles || [];
         }
 
-        // --- SENTIMENT LOGIC ---
         const analyzed = allArticles.map(a => {
             const text = (a.title + (a.description || "")).toLowerCase();
             if (text.match(/death|arrest|war|crisis|killed|crash|fire|danger/)) a.mood = "Urgent";
-            else if (text.match(/success|won|launch|profit|gold|happy/)) a.mood = "Positive";
+            else if (text.match(/success|won|win|profit|new|launch/)) a.mood = "Positive";
             else a.mood = "Neutral";
             return a;
         });
 
         const unique = Array.from(new Set(analyzed.map(a => a.url))).map(url => analyzed.find(a => a.url === url));
-        const filtered = unique.filter(a => a.title && a.title !== "[Removed]");
-        setArticles(filtered.slice(0, 40));
+        setArticles(unique.slice(0, 40));
         setLoading(false);
       } catch (e) { setLoading(false); }
     };
@@ -55,8 +53,8 @@ const NewsBoard = ({ activeView, selectedCats, country, supabase, onUpdate }) =>
       source: article.source?.name || article.source,
       published_at: article.publishedAt
     });
-    if (error) alert("Database error. Please disable RLS in Supabase.");
-    else { onUpdate(); alert("News saved to your Cloud Dashboard!"); }
+    if (!error) { onUpdate(); alert("Successfully saved to Cloud Database!"); }
+    else { alert("Error saving. Ensure RLS is disabled in Supabase."); }
   };
 
   return (
@@ -65,17 +63,12 @@ const NewsBoard = ({ activeView, selectedCats, country, supabase, onUpdate }) =>
         <div className="reader-overlay" onClick={() => setSelectedArticle(null)}>
           <div className="reader-content" onClick={e => e.stopPropagation()}>
             <button className="close-reader" onClick={() => setSelectedArticle(null)}>× Close Reader</button>
-            <img src={selectedArticle.urlToImage || selectedArticle.image_url} className="reader-img" alt="Cover" />
+            <img src={selectedArticle.urlToImage || selectedArticle.image_url} className="reader-img" alt="news" />
             <div className="reader-text-box">
-              <span className="reader-source">{selectedArticle.source?.name || selectedArticle.source}</span>
-              <h1>{selectedArticle.title}</h1>
-              <p className="reader-desc">{selectedArticle.description}</p>
-              <p className="reader-full-text">
-                [In-App Reader] NewsPulse is providing this summary via real-time cloud synchronization. 
-                Our system has parsed the verified metadata from {selectedArticle.source?.name || selectedArticle.source} to give you this snapshot. 
-                For full interactive media, please visit the source below.
-              </p>
-              <a href={selectedArticle.url} target="_blank" className="source-link">View Full Source Article →</a>
+              <span className="reader-source" style={{color:'var(--gold)', fontWeight:'800', fontSize:'0.8rem', textTransform:'uppercase'}}>{selectedArticle.source?.name || selectedArticle.source}</span>
+              <h1 style={{fontSize:'2rem', color:'var(--navy)', margin:'15px 0'}}>{selectedArticle.title}</h1>
+              <p style={{fontSize:'1.15rem', color:'#444', fontWeight:'600', marginBottom:'25px', borderLeft:'4px solid var(--gold)', paddingLeft:'15px'}}>{selectedArticle.description}</p>
+              <a href={selectedArticle.url} target="_blank" className="source-link" style={{display:'inline-block', background:'var(--navy)', color:'var(--gold)', padding:'15px 30px', textDecoration:'none', fontWeight:'800', borderRadius:'10px'}}>View Full Official Article →</a>
             </div>
           </div>
         </div>
@@ -84,13 +77,7 @@ const NewsBoard = ({ activeView, selectedCats, country, supabase, onUpdate }) =>
       {loading ? <div className="spinner-center"></div> : (
         <div className="news-container">
           {articles.map((news, i) => (
-            <NewsItem 
-              key={i} index={i} {...news} 
-              sourceName={news.source?.name || news.source} 
-              onBookmark={() => handleSave(news)}
-              onReadMore={() => setSelectedArticle(news)}
-              mood={news.mood}
-            />
+            <NewsItem key={i} index={i} {...news} sourceName={news.source?.name || news.source} onBookmark={() => handleSave(news)} onReadMore={() => setSelectedArticle(news)} mood={news.mood} />
           ))}
         </div>
       )}
