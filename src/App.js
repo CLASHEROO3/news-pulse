@@ -1,15 +1,9 @@
-/* 
- * Project: NewsPulse Aggregator (Final Year Project)
- * Tech Stack: React.js, Supabase (PostgreSQL), REST APIs
- * Features: Multi-Category Personalization, AI Sentiment Engine, Cloud Sync
- */
-
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import './App.css';
 import NewsBoard from './Components/NewsBoard';
 
-// --- SUPABASE CLOUD CONNECTION ---
 const supabase = createClient(
   'https://hmylzizegexlxcltpxfb.supabase.co', 
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhteWx6aXplZ2V4bHhjbHRweGZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1Njg5NzgsImV4cCI6MjA5MTE0NDk3OH0.DAqG8sfCj9au1CSG3dchA7Em4wvS0m9C_PXR5QHjPKE'
@@ -29,17 +23,15 @@ function App() {
     const saved = localStorage.getItem('newspulse_config');
     if (!saved) setShowOnboarding(true);
     else setSelectedCats(JSON.parse(saved));
-    
-    syncBookmarkCount();
-    document.title = "NewsPulse | Professional Aggregator";
+    fetchBookmarkCount();
   }, []);
 
-  const syncBookmarkCount = async () => {
+  const fetchBookmarkCount = async () => {
     const { count } = await supabase.from('bookmarks').select('*', { count: 'exact', head: true });
     setBookmarksCount(count || 0);
   };
 
-  const handlePreferences = () => {
+  const handleApply = () => {
     localStorage.setItem('newspulse_config', JSON.stringify(selectedCats));
     setShowOnboarding(false);
     setActiveView("for-you");
@@ -48,18 +40,18 @@ function App() {
   return (
     <div className="App">
       
-      {/* 1. ONBOARDING OVERLAY */}
+      {/* 1. ONBOARDING MODAL (FIXED POSITION) */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <img src="/logo.png" alt="NP Logo" className="modal-logo" />
+            <img src="/logo.png" alt="Logo" className="modal-logo" />
             <h2>Personalize NewsPulse</h2>
-            <p>Select your favorite topics for a <b>Cloud-Synced</b> news experience.</p>
+            <p>Select your favorite topics for a customized feed.</p>
             <div className="onboarding-grid">
               {CATEGORIES.map(cat => (
                 <button 
                   key={cat} 
-                  className={`chip ${selectedCats.includes(cat) ? 'active' : ''}`} 
+                  className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} 
                   onClick={() => {
                     if (selectedCats.includes(cat)) { if (selectedCats.length > 1) setSelectedCats(selectedCats.filter(c => c !== cat)); }
                     else setSelectedCats([...selectedCats, cat]);
@@ -67,12 +59,12 @@ function App() {
                 > {cat} </button>
               ))}
             </div>
-            <button className="save-btn" onClick={handlePreferences}>Start Reading</button>
+            <button className="save-btn" onClick={handleApply}>Start Reading</button>
           </div>
         </div>
       )}
 
-      {/* 2. PREMIUM NAVBAR */}
+      {/* 2. ADAPTIVE NAVBAR */}
       <nav className="navbar">
         <div className="nav-left">
           <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
@@ -82,31 +74,29 @@ function App() {
           </div>
         </div>
         <div className="nav-right">
-          <div className="bookmark-indicator" onClick={() => setActiveView("bookmarks")}>
-             🔖 <span>{bookmarksCount}</span>
-          </div>
-          <button className="settings-btn" onClick={() => setShowOnboarding(true)}>⚙</button>
-          <span className="nav-date">{new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short' })}</span>
+          <div className="bookmark-pill" onClick={() => setActiveView("bookmarks")}>🔖 {bookmarksCount}</div>
+          <button className="settings-trigger" onClick={() => setShowOnboarding(true)}>⚙</button>
+          <span className="pc-date">{new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', weekday: 'short' })}</span>
         </div>
       </nav>
 
       {/* 3. SIDEBAR DRAWER */}
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-           <h3>Menu</h3>
+           <h3>Settings</h3>
            <button className="close-btn" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
-          <button className={`menu-link ${activeView === 'bookmarks'?'active':''}`} onClick={() => {setActiveView('bookmarks'); setIsMenuOpen(false);}}>⭐ My Saved Articles</button>
+          <button className={`menu-btn ${activeView === 'bookmarks' ? 'active' : ''}`} onClick={() => {setActiveView('bookmarks'); setIsMenuOpen(false);}}>⭐ Saved Articles</button>
           <hr className="divider" />
-          <p className="sidebar-label">Regional Settings</p>
-          <button className={`menu-link ${country === 'in'?'active':''}`} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>🇮🇳 India Edition</button>
-          <button className={`menu-link ${country === 'us'?'active':''}`} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>🌎 Global Edition</button>
+          <p className="sidebar-label">Region</p>
+          <button className={`menu-btn ${country === 'in' ? 'active' : ''}`} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>🇮🇳 India</button>
+          <button className={`menu-btn ${country === 'us' ? 'active' : ''}`} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>🌎 Global</button>
         </div>
       </div>
       {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
 
-      {/* 4. SUB-NAV (HORIZONTAL CHIPS) */}
+      {/* 4. HORIZONTAL CATEGORY BAR */}
       <div className="sub-nav">
         <button className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
         {CATEGORIES.map(cat => (
@@ -114,9 +104,9 @@ function App() {
         ))}
       </div>
       
-      <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} supabase={supabase} onUpdate={syncBookmarkCount} />
+      <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} supabase={supabase} onUpdate={fetchBookmarkCount} />
 
-      <footer className="footer-final">
+      <footer className="footer">
         <p>© {new Date().getFullYear()} NewsPulse Aggregator | Built with React & Supabase</p>
       </footer>
     </div>
