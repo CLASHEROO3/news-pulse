@@ -1,58 +1,86 @@
-/* src/App.css */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-:root { --gold: #c59235; --navy: #0a192f; --cream: #fdfaf1; --border: #e8e2d5; }
+
+:root {
+  --gold: #c59235; --navy: #0a192f; --cream: #fdfaf1; --border: #e8e2d5;
+}
 
 * { box-sizing: border-box; }
-body { margin: 0; font-family: 'Inter', sans-serif; background: var(--cream); overflow-x: hidden; }
+body { 
+  margin: 0; font-family: 'Inter', sans-serif; background: var(--cream); 
+  background-image: radial-gradient(#d1cdc2 0.5px, transparent 0.5px);
+  background-size: 20px 20px; overflow-x: hidden;
+}
 
-/* NAVBAR MOBILE FIX */
-.navbar { 
-  background: var(--navy); height: 70px; padding: 0 15px; 
-  display: flex; justify-content: space-between; align-items: center; 
+/* --- NAVBAR --- */
+.navbar {
+  background: var(--navy); height: 75px; padding: 0 5%;
+  display: flex; justify-content: space-between; align-items: center;
   position: sticky; top: 0; z-index: 1000; color: white;
 }
-.logo-text { font-size: 1.1rem; font-weight: 800; }
-.nav-logo { height: 35px !important; width: auto; }
+.nav-logo { height: 35px !important; width: auto !important; object-fit: contain; }
+.logo-section { display: flex; align-items: center; gap: 12px; }
+.logo-text { font-size: 1.3rem; font-weight: 800; margin: 0; }
+.logo-text span { color: var(--gold); }
 
-/* HORIZONTAL SCROLL NAV (Native Mobile App Feel) */
-.sub-nav { 
-  display: flex; overflow-x: auto; gap: 8px; padding: 12px 15px; 
-  background: white; border-bottom: 1px solid var(--border); 
-  position: sticky; top: 70px; z-index: 900; 
-  scrollbar-width: none;
+/* --- MODAL (WELCOME POPUP) --- */
+.modal-overlay {
+  position: fixed !important; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(10, 25, 47, 0.98) !important;
+  display: flex !important; align-items: center; justify-content: center;
+  z-index: 9999 !important;
+}
+.modal-box {
+  background: white; padding: 35px; border-radius: 24px;
+  text-align: center; max-width: 480px; width: 90%; 
+  border: 3px solid var(--gold); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+.modal-logo { height: 60px !important; width: auto !important; margin-bottom: 20px; }
+
+/* CATEGORY CHIPS IN MODAL */
+.onboarding-grid { 
+  display: flex; flex-wrap: wrap; justify-content: center; 
+  gap: 10px; margin: 25px 0; 
+}
+.chip {
+  padding: 10px 18px; border-radius: 20px; border: 1.5px solid #eee;
+  background: #f8fafc; font-weight: 700; font-size: 0.85rem;
+  cursor: pointer; text-transform: capitalize; color: #64748b; transition: 0.3s;
+}
+.chip.active { background: var(--navy); color: var(--gold); border-color: var(--navy); }
+
+/* --- SIDEBAR --- */
+.sidebar-drawer {
+  position: fixed !important; top: 0; left: -320px !important; 
+  width: 280px; height: 100vh; background: var(--navy) !important;
+  z-index: 2000 !important; transition: 0.4s ease; padding: 30px 20px;
+}
+.sidebar-drawer.open { left: 0 !important; }
+
+/* --- SUB-NAV CATEGORIES --- */
+.sub-nav {
+  display: flex; gap: 10px; padding: 12px 5%; background: white; 
+  border-bottom: 1px solid var(--border); position: sticky; top: 75px; z-index: 900;
+  overflow-x: auto; white-space: nowrap; scrollbar-width: none;
 }
 .sub-nav::-webkit-scrollbar { display: none; }
-.sub-nav-item { 
-  padding: 8px 18px; border-radius: 20px; border: none; background: #f0f0f0; 
-  white-space: nowrap; font-weight: 700; font-size: 0.8rem; color: #64748b;
+
+/* REUSABLE CATEGORY BUTTON STYLE */
+.nav-item {
+  padding: 10px 22px; border-radius: 25px; border: 1.5px solid #eee;
+  background: #f8fafc; white-space: nowrap; font-weight: 700;
+  font-size: 0.85rem; color: #64748b; cursor: pointer; text-transform: capitalize;
 }
-.sub-nav-item.active { background: var(--navy); color: var(--gold); }
+.nav-item.active { background: var(--navy); color: var(--gold); border-color: var(--navy); }
 
-/* GRID FIX FOR MOBILE */
-.news-container { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-  gap: 15px; padding: 15px; 
+/* --- SAVE BUTTON --- */
+.save-btn {
+  background: var(--navy); color: var(--gold); border: none;
+  padding: 15px; width: 100%; border-radius: 12px;
+  font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
 }
+.save-btn:hover { transform: scale(1.02); }
 
-/* CARDS */
-.news-card { 
-  background: white; border-radius: 12px; overflow: hidden; 
-  border: 1px solid var(--border); height: 460px; 
-  display: flex; flex-direction: column; position: relative;
-}
-
-.card-img-box { height: 180px; width: 100%; position: relative; background: #000; }
-.card-img-box img { width: 100%; height: 100%; object-fit: cover; }
-
-/* MOBILE RESPONSIVE QUERIES */
 @media (max-width: 768px) {
-  .news-container { grid-template-columns: 1fr !important; } /* Single column for phone */
-  .onboarding-grid { grid-template-columns: 1fr; }
-  .modal-box { padding: 25px; width: 95%; }
-  .logo-text { font-size: 1rem; }
+  .news-container { grid-template-columns: 1fr !important; }
+  .logo-text { font-size: 1.1rem; }
 }
-
-/* MODAL FIX */
-.modal-overlay { position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 25, 47, 0.98); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-.modal-box { background: white; border-radius: 20px; padding: 30px; text-align: center; border: 3px solid var(--gold); }
