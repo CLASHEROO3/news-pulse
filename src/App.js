@@ -16,70 +16,86 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [bookmarksCount, setBookmarksCount] = useState(0);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const ALL_CATS = ["general", "technology", "business", "sports", "entertainment", "health"];
 
+  // 1. Load User on Startup
   useEffect(() => {
-    initializeCloudUser();
+    const initialize = async () => {
+      let deviceId = localStorage.getItem('np_device_id');
+      if (!deviceId) {
+        deviceId = 'id_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('np_device_id', deviceId);
+      }
+
+      const { data } = await supabase.from('user_settings').select('*').eq('device_id', deviceId).single();
+      
+      if (data) {
+        setSelectedCats(data.selected_categories);
+        setCountry(data.region);
+        setIsInitialLoad(false);
+      } else {
+        setShowOnboarding(true);
+        setIsInitialLoad(false);
+      }
+    };
+    initialize();
     fetchBookmarkCount();
   }, []);
 
-  const initializeCloudUser = async () => {
-    let deviceId = localStorage.getItem('np_device_id');
-    if (!deviceId) {
-      deviceId = 'id_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('np_device_id', deviceId);
+  // 2. AUTO-SYNC LOGIC: Syncs to Cloud every time categories or country changes
+  useEffect(() => {
+    if (!isInitialLoad) {
+      const syncToCloud = async () => {
+        const deviceId = localStorage.getItem('np_device_id');
+        await supabase.from('user_settings').upsert({
+          device_id: deviceId,
+          selected_categories: selectedCats,
+          region: country
+        });
+      };
+      syncToCloud();
     }
-
-    const { data, error } = await supabase.from('user_settings').select('*').eq('device_id', deviceId).single();
-    if (error || !data) {
-      setShowOnboarding(true);
-    } else {
-      setSelectedCats(data.selected_categories);
-      setCountry(data.region);
-    }
-  };
+  }, [selectedCats, country, isInitialLoad]);
 
   const fetchBookmarkCount = async () => {
     const { count } = await supabase.from('bookmarks').select('*', { count: 'exact', head: true });
     setBookmarksCount(count || 0);
   };
 
-  const saveToCloud = async () => {
-    const deviceId = localStorage.getItem('np_device_id');
-    const { error } = await supabase.from('user_settings').upsert({
-      device_id: deviceId,
-      selected_categories: selectedCats,
-      region: country
-    });
-
-    if (!error) {
-      setShowOnboarding(false);
-      setActiveView("for-you");
+  const toggleCategory = (cat) => {
+    if (selectedCats.includes(cat)) {
+      if (selectedCats.length > 1) setSelectedCats(selectedCats.filter(c => c !== cat));
+    } else {
+      setSelectedCats([...selectedCats, cat]);
     }
   };
 
   return (
     <div className="App">
+      {/* ONBOARDING MODAL */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
             <img src="/logo.png" alt="Logo" className="modal-logo" />
-            <h2>Personalize NewsPulse</h2>
-            <p>Preferences will be synced to our <b>PostgreSQL Cloud</b>.</p>
-            <div className="onboarding-grid">
+            <h2>Welcome to NewsPulse</h2>
+            <p>Select your interests. We sync your choices to the cloud <b>automatically</b>.</p>
+            <div className="onboarding-grid" style={{display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'10px', margin:'20px 0'}}>
               {ALL_CATS.map(cat => (
-                <button key={cat} className={`chip ${selectedCats.includes(cat) ? 'active' : ''}`} onClick={() => {
-                  if (selectedCats.includes(cat)) { if (selectedCats.length > 1) setSelectedCats(selectedCats.filter(c => c !== cat)); }
-                  else setSelectedCats([...selectedCats, cat]);
-                }}>{cat}</button>
+                <button key={cat} className={`chip ${selectedCats.includes(cat) ? 'active' : ''}`} onClick={() => toggleCategory(cat)}>
+                  {cat} {selectedCats.includes(cat) ? '✓' : '+'}
+                </button>
               ))}
             </div>
-            <button className="save-btn" onClick={saveToCloud}>Sync to Cloud & Start</button>
+            <button className="save-btn" onClick={() => { setShowOnboarding(false); setActiveView("for-you"); }}>
+              Get Started
+            </button>
           </div>
         </div>
       )}
 
+      {/* NAVBAR */}
       <nav className="navbar">
         <div className="nav-left">
           <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
@@ -91,21 +107,24 @@ function App() {
         </div>
       </nav>
 
+      {/* SIDEBAR */}
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
-        <div className="sidebar-header"><h3>Settings</h3><button onClick={() => setIsMenuOpen(false)} style={{background:'none', border:'none', color:'white', fontSize:'1.5rem'}}>×</button></div>
+        <div className="sidebar-header"><h3>Settings</h3><button onClick={() => setIsMenuOpen(false)}>×</button></div>
         <div className="sidebar-content">
-          <button className={`nav-item ${activeView === 'bookmarks'?'active':''}`} onClick={() => {setActiveView('bookmarks'); setIsMenuOpen(false);}}>⭐ Saved Articles</button>
+          <button className={`menu-btn ${activeView === 'bookmarks'?'active':''}`} onClick={() => {setActiveView('bookmarks'); setIsMenuOpen(false);}}>⭐ Saved Articles</button>
           <hr style={{border:'0.5px solid #1e293b', margin:'15px 0'}} />
-          <button className={`nav-item ${country==='in'?'active':''}`} onClick={() => {setCountry('in'); setIsMenuOpen(false); saveToCloud();}}>🇮🇳 India News</button>
-          <button className={`nav-item ${country==='us'?'active':''}`} onClick={() => {setCountry('us'); setIsMenuOpen(false); saveToCloud();}}>🌎 Global News</button>
+          <p className="sidebar-label">Regional Edition</p>
+          <button className={`menu-btn ${country==='in'?'active':''}`} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>🇮🇳 India News</button>
+          <button className={`menu-btn ${country==='us'?'active':''}`} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>🌎 Global News</button>
         </div>
       </div>
       {isMenuOpen && <div style={{position:'fixed', top:0, left:0, width:'100%', height:'100%', background:'rgba(0,0,0,0.6)', zIndex:1500}} onClick={() => setIsMenuOpen(false)}></div>}
 
+      {/* SUB-NAV */}
       <div className="sub-nav">
-        <button className={`nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
+        <button className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
         {ALL_CATS.map(cat => (
-          <button key={cat} className={`nav-item ${activeView === cat ? 'active' : ''}`} onClick={() => setActiveView(cat)}>{cat}</button>
+          <button key={cat} className={`sub-nav-item ${activeView === cat ? 'active' : ''}`} onClick={() => setActiveView(cat)}>{cat}</button>
         ))}
       </div>
       
