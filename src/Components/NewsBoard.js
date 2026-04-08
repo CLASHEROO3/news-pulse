@@ -23,7 +23,7 @@ const NewsBoard = ({ activeView, selectedCats, country, supabase, onUpdate }) =>
         if (activeView === "for-you") {
           const reqs = selectedCats.map(cat => axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${cat}/${country}.json`));
           const resps = await Promise.all(reqs);
-          resps.forEach(r => { if (r.data && r.data.articles) allArticles = [...allArticles, ...r.data.articles]; });
+          resps.forEach(r => { if (r.data.articles) allArticles = [...allArticles, ...r.data.articles]; });
         } else {
           const res = await axios.get(`https://saurav.tech/NewsAPI/top-headlines/category/${activeView}/${country}.json`);
           allArticles = res.data.articles || [];
@@ -31,7 +31,7 @@ const NewsBoard = ({ activeView, selectedCats, country, supabase, onUpdate }) =>
 
         const analyzed = allArticles.map(a => {
             const text = (a.title + (a.description || "")).toLowerCase();
-            if (text.match(/death|arrest|war|crisis|killed|crash|fire|danger/)) a.mood = "Urgent";
+            if (text.match(/death|arrest|war|crisis|killed|crash|fire/)) a.mood = "Urgent";
             else if (text.match(/success|won|win|profit|new|launch/)) a.mood = "Positive";
             else a.mood = "Neutral";
             return a;
@@ -54,7 +54,6 @@ const NewsBoard = ({ activeView, selectedCats, country, supabase, onUpdate }) =>
       published_at: article.publishedAt
     });
     if (!error) { onUpdate(); alert("Successfully saved to Cloud Database!"); }
-    else { alert("Error saving. Ensure RLS is disabled in Supabase."); }
   };
 
   return (
@@ -63,24 +62,25 @@ const NewsBoard = ({ activeView, selectedCats, country, supabase, onUpdate }) =>
         <div className="reader-overlay" onClick={() => setSelectedArticle(null)}>
           <div className="reader-content" onClick={e => e.stopPropagation()}>
             <button className="close-reader" onClick={() => setSelectedArticle(null)}>× Close Reader</button>
-            <img src={selectedArticle.urlToImage || selectedArticle.image_url} className="reader-img" alt="news" />
+            <img src={selectedArticle.urlToImage || selectedArticle.image_url} className="reader-img" alt="Cover" />
             <div className="reader-text-box">
               <span className="reader-source" style={{color:'var(--gold)', fontWeight:'800', fontSize:'0.8rem', textTransform:'uppercase'}}>{selectedArticle.source?.name || selectedArticle.source}</span>
-              <h1 style={{fontSize:'2rem', color:'var(--navy)', margin:'15px 0'}}>{selectedArticle.title}</h1>
-              <p style={{fontSize:'1.15rem', color:'#444', fontWeight:'600', marginBottom:'25px', borderLeft:'4px solid var(--gold)', paddingLeft:'15px'}}>{selectedArticle.description}</p>
-              <a href={selectedArticle.url} target="_blank" className="source-link" style={{display:'inline-block', background:'var(--navy)', color:'var(--gold)', padding:'15px 30px', textDecoration:'none', fontWeight:'800', borderRadius:'10px'}}>View Full Official Article →</a>
+              <h1>{selectedArticle.title}</h1>
+              <p style={{fontSize:'1.1rem', color:'#444', lineHeight:'1.5', borderLeft:'4px solid var(--gold)', paddingLeft:'15px'}}>{selectedArticle.description}</p>
+              <a href={selectedArticle.url} target="_blank" className="source-link" style={{display:'inline-block', background:'var(--navy)', color:'var(--gold)', padding:'15px 30px', textDecoration:'none', fontWeight:'800', borderRadius:'10px', marginTop:'20px'}}>View Official Article</a>
             </div>
           </div>
         </div>
       )}
 
-      {loading ? <div className="spinner-center"></div> : (
+      {loading ? <div className="spinner-center" style={{margin:'100px auto', width:'40px', height:'40px', border:'4px solid #ddd', borderTopColor:'#c59235', borderRadius:'50%', animation:'spin 1s linear infinite'}}></div> : (
         <div className="news-container">
           {articles.map((news, i) => (
             <NewsItem key={i} index={i} {...news} sourceName={news.source?.name || news.source} onBookmark={() => handleSave(news)} onReadMore={() => setSelectedArticle(news)} mood={news.mood} />
           ))}
         </div>
       )}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 };
