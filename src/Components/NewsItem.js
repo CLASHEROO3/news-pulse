@@ -13,17 +13,22 @@ const NewsItem = ({ title, description, urlToImage, image_url, sourceName, index
   return (
     <div className="news-card">
       <div className="card-img-box">
-        <span className={`mood-badge ${mood || 'Neutral'}`}>{mood || 'Neutral'}</span>
+        {/* Styled Mood Badge */}
+        <span className={`mood-pill ${mood || 'Neutral'}`}>{mood || 'Neutral'}</span>
+        
         <img src={urlToImage || image_url || defaultImg} alt="news" onError={e => e.target.src = defaultImg} />
-        <span className="source-label">{sourceName}</span>
+        
+        {/* Source Badge at bottom-left */}
+        <span className="card-badge">{sourceName}</span>
       </div>
+
       <div className="card-body">
         <div className="card-time">⏱ {getFakeTime(index)}</div>
-        <h3>{title ? title.slice(0, 65) : "Full Headline Loading..."}</h3>
-        <p>{description ? description.slice(0, 95) : "Detailed coverage available in the integrated reader."}...</p>
+        <h3>{title ? title.slice(0, 65) : "Headline Loading..."}</h3>
+        <p>{description ? description.slice(0, 95) : "Full summary available in reader mode."}...</p>
         <div className="card-actions">
-           <button onClick={onReadMore} className="btn-read">Read</button>
-           <button onClick={onBookmark} className="btn-save">🔖 Save</button>
+           <button onClick={onReadMore} className="read-btn">Read</button>
+           <button onClick={onBookmark} className="save-btn">🔖 Save</button>
         </div>
       </div>
     </div>
