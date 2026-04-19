@@ -123,11 +123,11 @@ function App() {
 
       {/* 4. SUB-NAV TABS */}
       <div className="sub-nav">
-        <button className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
-        {CATEGORIES.map(cat => (
-          <button key={cat} className={`sub-nav-item ${activeView === cat ? 'active' : ''}`} onClick={() => setActiveView(cat)}>{cat}</button>
-        ))}
-      </div>
+  <button className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => setActiveView('for-you')}>★ For You</button>
+  {CATEGORIES.map(cat => (
+    <button key={cat} className={`sub-nav-item ${activeView === cat ? 'active' : ''}`} onClick={() => setActiveView(cat)}>{cat}</button>
+  ))}
+</div>
       
       <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} supabase={supabase} onUpdate={refreshBookmarkCount} />
 
