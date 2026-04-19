@@ -4,8 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import './App.css';
 import NewsBoard from './Components/NewsBoard';
 
-// --- SUPABASE CLOUD INITIALIZATION ---
-// This connects the app to your real PostgreSQL database
+// --- SUPABASE CONFIGURATION ---
 const supabase = createClient(
   'https://hmylzizegexlxcltpxfb.supabase.co', 
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhteWx6aXplZ2V4bHhjbHRweGZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1Njg5NzgsImV4cCI6MjA5MTE0NDk3OH0.DAqG8sfCj9au1CSG3dchA7Em4wvS0m9C_PXR5QHjPKE'
@@ -18,40 +17,35 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [bookmarksCount, setBookmarksCount] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const CATEGORIES = ["general", "technology", "business", "sports", "entertainment", "health"];
+  const ALL_CATEGORIES = ["general", "technology", "business", "sports", "entertainment", "health"];
 
-  // 1. App Initialization: Link device to Cloud Database
   useEffect(() => {
     const initializeUser = async () => {
-      // Use a persistent Device ID to identify the user in the cloud
       let deviceId = localStorage.getItem('np_device_id');
       if (!deviceId) {
         deviceId = 'user_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('np_device_id', deviceId);
       }
 
-      // Fetch user settings from Supabase user_settings table
       const { data } = await supabase.from('user_settings').select('*').eq('device_id', deviceId).single();
-      
       if (data) {
         setSelectedCats(data.selected_categories);
         setCountry(data.region);
+        setIsInitialLoad(false);
       } else {
-        setShowOnboarding(true); // New user: show the premium modal
+        setShowOnboarding(true);
+        setIsInitialLoad(false);
       }
-      setIsLoaded(true);
-      refreshBookmarkCount();
     };
     initializeUser();
-    document.title = "NewsPulse | Cloud Aggregator";
+    updateBookmarkCount();
   }, []);
 
-  // 2. Automated Background Sync: Mirror preferences to Cloud PostgreSQL
   useEffect(() => {
-    if (isLoaded) {
-      const syncData = async () => {
+    if (!isInitialLoad) {
+      const syncToCloud = async () => {
         const deviceId = localStorage.getItem('np_device_id');
         await supabase.from('user_settings').upsert({
           device_id: deviceId,
@@ -59,11 +53,11 @@ function App() {
           region: country
         });
       };
-      syncData();
+      syncToCloud();
     }
-  }, [selectedCats, country, isLoaded]);
+  }, [selectedCats, country, isInitialLoad]);
 
-  const refreshBookmarkCount = async () => {
+  const updateBookmarkCount = async () => {
     const { count } = await supabase.from('bookmarks').select('*', { count: 'exact', head: true });
     setBookmarksCount(count || 0);
   };
@@ -85,15 +79,15 @@ function App() {
           <div className="modal-box">
             <img src="/logo.png" alt="Logo" className="modal-logo" />
             <h2>Welcome to NewsPulse</h2>
-            <p>Select your favorite topics. Your choices sync to the cloud <b>automatically</b>.</p>
+            <p>Select your favorite topics. We sync your choices to the cloud <b>automatically</b>.</p>
             <div className="onboarding-grid">
-              {CATEGORIES.map(cat => (
+              {ALL_CATEGORIES.map(cat => (
                 <button 
                   key={cat} 
                   className={`pill-chip ${selectedCats.includes(cat) ? 'active' : ''}`} 
                   onClick={() => toggleCategory(cat)}
                 >
-                  {cat}
+                  {cat} {selectedCats.includes(cat) ? '✓' : '+'}
                 </button>
               ))}
             </div>
@@ -125,7 +119,7 @@ function App() {
         </div>
       </nav>
 
-      {/* 3. SIDEBAR DRAWER (SETTINGS) */}
+      {/* 3. SIDEBAR DRAWER */}
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
            <h3>Settings</h3>
@@ -141,7 +135,7 @@ function App() {
       </div>
       {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
 
-      {/* 4. SUB-NAVBAR (HORIZONTAL CATEGORY SWIPE) */}
+      {/* 4. SUB-NAVBAR */}
       <div className="sub-nav">
         <button 
           className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} 
@@ -149,7 +143,7 @@ function App() {
         >
           ★ For You
         </button>
-        {CATEGORIES.map(cat => (
+        {ALL_CATEGORIES.map(cat => (
           <button 
             key={cat} 
             className={`sub-nav-item ${activeView === cat ? 'active' : ''}`} 
@@ -160,17 +154,10 @@ function App() {
         ))}
       </div>
       
-      {/* 5. NEWS CONTENT BOARD */}
-      <NewsBoard 
-        activeView={activeView} 
-        selectedCats={selectedCats} 
-        country={country} 
-        supabase={supabase} 
-        onUpdate={refreshBookmarkCount} 
-      />
+      <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} supabase={supabase} onUpdate={updateBookmarkCount} />
 
-      <footer className="footer-professional">
-        <p>© {new Date().getFullYear()} NewsPulse Aggregator | Cloud PostgreSQL Architecture</p>
+      <footer className="footer-final">
+        <p>© {new Date().getFullYear()} NewsPulse Aggregator | Bharat Edition</p>
       </footer>
     </div>
   );
