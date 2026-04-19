@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import './App.css';
 import NewsBoard from './Components/NewsBoard';
 
-// --- CLOUD DATABASE INITIALIZATION ---
+// --- DATABASE CONFIGURATION ---
 const supabase = createClient(
   'https://hmylzizegexlxcltpxfb.supabase.co', 
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhteWx6aXplZ2V4bHhjbHRweGZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1Njg5NzgsImV4cCI6MjA5MTE0NDk3OH0.DAqG8sfCj9au1CSG3dchA7Em4wvS0m9C_PXR5QHjPKE'
@@ -20,7 +20,7 @@ function App() {
   const [bookmarksCount, setBookmarksCount] = useState(0);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const ALL_CATEGORIES = ["general", "technology", "business", "sports", "entertainment", "health", "science"];
+  const ALL_CATEGORIES = ["general", "business", "technology", "sports", "entertainment", "health", "science"];
 
   useEffect(() => {
     const initializeUser = async () => {
@@ -41,7 +41,6 @@ function App() {
     };
     initializeUser();
     updateBookmarkCount();
-    document.title = "NewsPulse | Professional News Aggregator";
   }, []);
 
   useEffect(() => {
@@ -63,6 +62,14 @@ function App() {
     setBookmarksCount(count || 0);
   };
 
+  const toggleCategory = (cat) => {
+    if (selectedCats.includes(cat)) {
+      if (selectedCats.length > 1) setSelectedCats(selectedCats.filter(c => c !== cat));
+    } else {
+      setSelectedCats([...selectedCats, cat]);
+    }
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     const val = e.target.search.value;
@@ -71,44 +78,39 @@ function App() {
 
   return (
     <div className="App">
-      
-      {/* 1. NEWS TICKER */}
       <div className="ticker-wrap">
         <div className="ticker-title">BREAKING</div>
         <div className="ticker">
-          <div className="ticker-item">Live Global Engine Active • Cloud Synchronization Enabled • Real-time News Aggregation • Built for Production Environments •</div>
+          <div className="ticker-item">Cloud Sync Active • v2.6 Production Build • Real-time News Engine Enabled • Developed by Rishi, Jay & Sarthak •</div>
         </div>
       </div>
 
-      {/* 2. ONBOARDING MODAL */}
+      {/* --- PREMIUM MODAL --- */}
       {showOnboarding && (
         <div className="modal-overlay">
           <div className="modal-box">
             <img src="/logo.png" alt="Logo" className="modal-logo" />
             <h2 className="modal-title">Personalize Your Feed</h2>
             <p className="modal-desc">Select topics to build your <b>Cloud-Synced</b> feed.</p>
-            <div className="onboarding-grid">
+            <div className="modal-grid">
               {ALL_CATEGORIES.map(cat => (
                 <button 
                   key={cat} 
-                  className={`onboarding-chip ${selectedCats.includes(cat) ? 'active' : ''}`} 
-                  onClick={() => {
-                    if(selectedCats.includes(cat)) { if(selectedCats.length > 1) setSelectedCats(selectedCats.filter(c => c !== cat)) }
-                    else setSelectedCats([...selectedCats, cat])
-                  }}
+                  className={`modal-chip ${selectedCats.includes(cat) ? 'active' : ''}`} 
+                  onClick={() => toggleCategory(cat)}
                 >
                   {cat}
                 </button>
               ))}
             </div>
-            <button className="modal-action-btn" onClick={() => setShowOnboarding(false)}>
-              Start Reading
+            <button className="modal-start-btn" onClick={() => setShowOnboarding(false)}>
+              Get Started
             </button>
           </div>
         </div>
       )}
 
-      {/* 3. NAVBAR */}
+      {/* --- NAVBAR --- */}
       <nav className="navbar">
         <div className="nav-left">
           <button className="hamburger" onClick={() => setIsMenuOpen(true)}>☰</button>
@@ -119,7 +121,7 @@ function App() {
         </div>
 
         <form className="nav-search-pc" onSubmit={handleSearch}>
-          <input type="text" name="search" placeholder="Search topics..." />
+          <input type="text" name="search" placeholder="Search news..." />
         </form>
         
         <div className="nav-right">
@@ -127,52 +129,38 @@ function App() {
             🔖 <span>{bookmarksCount}</span>
           </button>
           <button className="nav-gear" onClick={() => setShowOnboarding(true)}>⚙</button>
-          <span className="nav-date">
-            {new Date().toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
-          </span>
+          <span className="nav-date">{new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'})}</span>
         </div>
       </nav>
 
-      {/* 4. SIDEBAR */}
+      {/* --- SIDEBAR --- */}
       <div className={`sidebar-drawer ${isMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
            <h3>Settings</h3>
            <button className="close-sidebar" onClick={() => setIsMenuOpen(false)}>×</button>
         </div>
         <div className="sidebar-content">
-          <button className={`menu-item ${activeView === 'bookmarks' ? 'active' : ''}`} onClick={() => {setActiveView('bookmarks'); setIsMenuOpen(false);}}>⭐ Saved Articles</button>
-          <hr />
-          <p className="sidebar-label">Region</p>
-          <button className={`menu-item ${country === 'in' ? 'active' : ''}`} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>🇮🇳 India News</button>
-          <button className={`menu-item ${country === 'us' ? 'active' : ''}`} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>🌎 Global News</button>
+          <button className={`side-link ${activeView === 'bookmarks' ? 'active' : ''}`} onClick={() => {setActiveView('bookmarks'); setIsMenuOpen(false);}}>⭐ Saved Library</button>
+          <hr className="side-divider" />
+          <p className="side-label">Region</p>
+          <button className={`side-link ${country === 'in' ? 'active' : ''}`} onClick={() => {setCountry('in'); setIsMenuOpen(false);}}>🇮🇳 India News</button>
+          <button className={`side-link ${country === 'us' ? 'active' : ''}`} onClick={() => {setCountry('us'); setIsMenuOpen(false);}}>🌎 Global News</button>
         </div>
       </div>
       {isMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMenuOpen(false)}></div>}
 
-      {/* 5. SUB-NAV TABS */}
+      {/* --- CATEGORY SUB-NAV --- */}
       <div className="sub-nav">
-        <button 
-          className={`sub-nav-item ${activeView === 'for-you' ? 'active' : ''}`} 
-          onClick={() => {setActiveView('for-you'); setSearchTerm("");}}
-        >
-          ★ For You
-        </button>
+        <button className={`sub-nav-btn ${activeView === 'for-you' ? 'active' : ''}`} onClick={() => {setActiveView('for-you'); setSearchTerm("");}}>★ For You</button>
         {ALL_CATEGORIES.map(cat => (
-          <button 
-            key={cat} 
-            className={`sub-nav-item ${activeView === cat ? 'active' : ''}`} 
-            onClick={() => {setActiveView(cat); setSearchTerm("");}}
-          >
-            {cat}
-          </button>
+          <button key={cat} className={`sub-nav-btn ${activeView === cat ? 'active' : ''}`} onClick={() => {setActiveView(cat); setSearchTerm("");}}>{cat}</button>
         ))}
       </div>
       
       <NewsBoard activeView={activeView} selectedCats={selectedCats} country={country} searchTerm={searchTerm} supabase={supabase} onUpdate={updateBookmarkCount} />
 
-      {/* --- FOOTER FIX --- */}
       <footer className="footer-final">
-        <p>© {new Date().getFullYear()} NewsPulse Aggregator | Built with React, Supabase & REST APIs</p>
+        <p>© {new Date().getFullYear()} NewsPulse Aggregator | Bharat Edition | S.P.P.U. Project</p>
       </footer>
     </div>
   );
