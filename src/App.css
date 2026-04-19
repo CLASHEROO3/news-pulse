@@ -7,67 +7,101 @@
 * { box-sizing: border-box; }
 body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--cream); overflow-x: hidden; }
 
-/* --- TICKER --- */
-.ticker-wrap { background: #ef4444; color: white; height: 35px; display: flex; align-items: center; font-size: 0.8rem; font-weight: 800; overflow: hidden; position: relative; z-index: 1001; }
-.ticker-title { background: #000; padding: 0 15px; height: 100%; display: flex; align-items: center; z-index: 2; position: absolute; }
-.ticker { display: flex; white-space: nowrap; padding-left: 100%; animation: ticker 30s linear infinite; }
-@keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
-.ticker-item { padding: 0 2rem; }
+/* 1. TICKER */
+.ticker-bar { background: #ef4444; color: white; height: 35px; display: flex; align-items: center; font-size: 0.8rem; font-weight: 800; overflow: hidden; }
+.ticker-label { background: #000; padding: 0 15px; height: 100%; display: flex; align-items: center; z-index: 2; }
+.ticker-text { flex: 1; }
 
-/* --- NAVBAR --- */
-.navbar { background: var(--navy); height: 80px; padding: 0 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; color: white; }
+/* 2. NAVBAR & ALIGNMENT */
+.navbar {
+  background: var(--navy); height: 80px; padding: 0 5%;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 1000; color: white;
+}
+.nav-left, .brand-group { display: flex; align-items: center; gap: 15px; }
 .nav-logo { height: 35px !important; width: auto; object-fit: contain; }
-.brand { display: flex; align-items: center; gap: 10px; }
-.logo-text { font-size: 1.4rem; font-weight: 800; } .logo-text span { color: var(--gold); }
-.hamburger { background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
+.logo-text { font-size: 1.4rem; font-weight: 800; margin: 0; }
+.logo-text span { color: var(--gold); }
+.hamburger { background: none; border: none; color: white; font-size: 2rem; cursor: pointer; padding: 5px; }
+
+.nav-search-pc input { 
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
+  padding: 10px 20px; border-radius: 10px; color: white; width: 250px; outline: none;
+}
+
 .nav-right { display: flex; align-items: center; gap: 20px; }
-.bookmark-pill { background: var(--gold); color: var(--navy); padding: 8px 18px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; cursor: pointer; }
-.settings-gear { background: none; border: none; color: var(--gold); font-size: 1.3rem; cursor: pointer; }
+.nav-badge { background: var(--gold); color: var(--navy); padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; border: none; cursor: pointer; }
+.nav-gear { background: none; border: none; color: var(--gold); font-size: 1.3rem; cursor: pointer; }
+.nav-date { color: #94a3b8; font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
 
-/* --- SUB-NAV CATEGORIES --- */
-.sub-nav { display: flex; overflow-x: auto; gap: 10px; padding: 12px 5%; background: white; border-bottom: 1px solid var(--border); position: sticky; top: 80px; z-index: 900; }
-.sub-nav-item { padding: 10px 22px; border-radius: 30px; border: 1px solid #eee; background: #f8fafc; white-space: nowrap; font-weight: 700; font-size: 0.85rem; color: #64748b; cursor: pointer; text-transform: capitalize; transition: 0.3s; }
-.sub-nav-item.active { background: var(--navy); color: var(--gold); border-color: var(--navy); }
-
-/* --- PREMIUM MODAL (FIXED) --- */
+/* 3. PREMIUM MODAL (THE FIX FOR YOUR SCREENSHOT) */
 .modal-overlay {
-  position: fixed !important; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(10, 25, 47, 0.9) !important; z-index: 9999 !important;
+  position: fixed !important; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(10, 25, 47, 0.9) !important; z-index: 10000 !important;
   display: flex !important; align-items: center; justify-content: center;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 .modal-box {
   background: white; border-radius: 28px; padding: 45px 30px; 
   text-align: center; max-width: 480px; width: 90%; 
   border: 4px solid var(--gold); box-shadow: 0 30px 60px rgba(0,0,0,0.5);
 }
-.modal-logo { height: 70px !important; width: auto; margin-bottom: 25px; border-radius: 12px; }
-.modal-title { font-size: 1.8rem; color: var(--navy); margin-bottom: 10px; }
-.modal-desc { color: #64748b; margin-bottom: 25px; }
+.modal-logo { height: 80px !important; width: auto; border-radius: 15px; margin-bottom: 25px; }
 
-/* Modal Chip Styles - THE FIX FOR YOUR SCREENSHOT */
-.onboarding-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 30px 0; }
+.modal-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 30px 0; }
 
-.onboarding-chip {
-  padding: 12px 24px; border-radius: 50px; border: 2px solid #f1f5f9;
+.modal-chip {
+  padding: 12px 22px; border-radius: 50px; border: 2.5px solid #f1f5f9;
   background: #f8fafc; font-weight: 700; font-size: 0.9rem;
   cursor: pointer; text-transform: capitalize; transition: 0.3s; color: #64748b;
 }
-.onboarding-chip:hover { border-color: var(--gold); transform: translateY(-2px); }
-.onboarding-chip.active { background: var(--navy); color: var(--gold); border-color: var(--gold); box-shadow: 0 4px 15px rgba(10, 25, 47, 0.2); }
+.modal-chip:hover { border-color: var(--gold); }
+.modal-chip.active { background: var(--navy); color: var(--gold); border-color: var(--gold); }
 
-.modal-action-btn { 
-    background: var(--navy); color: var(--gold); border: none; padding: 18px; 
-    width: 100%; border-radius: 15px; font-weight: 800; cursor: pointer; 
-    font-size: 1.1rem; transition: 0.3s;
+.modal-start-btn { 
+  background: var(--navy); color: var(--gold); border: none; padding: 18px; 
+  width: 100%; border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1.1rem; 
 }
-.modal-action-btn:hover { background: var(--gold); color: var(--navy); transform: scale(1.02); }
 
-/* --- SIDEBAR & OVERLAY --- */
+/* 4. SUB-NAV CATEGORY BAR */
+.sub-nav {
+  display: flex; gap: 10px; padding: 12px 5%; background: white; 
+  border-bottom: 1px solid var(--border); position: sticky; top: 80px; z-index: 900;
+  overflow-x: auto; white-space: nowrap; scrollbar-width: none;
+}
+.sub-nav::-webkit-scrollbar { display: none; }
+.sub-nav-btn { padding: 10px 24px; border-radius: 30px; border: 1.5px solid #eee; background: #f8fafc; font-weight: 700; font-size: 0.85rem; color: #64748b; cursor: pointer; text-transform: capitalize; transition: 0.3s; }
+.sub-nav-btn.active { background: var(--navy); color: var(--gold); border-color: var(--navy); }
+
+/* 5. NEWS GRID & CARDS */
+.news-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; padding: 30px 5% 100px 5%; }
+.news-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); height: 480px; display: flex; flex-direction: column; transition: 0.3s; position: relative; }
+.news-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(10, 25, 47, 0.1); }
+
+.card-img-box { height: 180px; width: 100%; position: relative; background: #000; overflow: hidden; }
+.card-img-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+
+.card-badge { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.8); color: white; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.65rem; }
+.mood-pill { position: absolute; top: 12px; right: 12px; padding: 5px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; color: white !important; text-transform: uppercase; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+.Urgent { background: #ef4444 !important; } .Positive { background: #22c55e !important; } .Neutral { background: #64748b !important; }
+
+.card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+.card-time { font-size: 0.75rem; color: var(--gold); font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+.card-body h3 { font-size: 1.1rem; color: var(--navy); line-height: 1.4; height: 2.8em; overflow: hidden; margin: 0; }
+
+.card-actions { display: flex; gap: 10px; margin-top: auto; }
+.btn-read { flex: 2; background: var(--navy); color: var(--gold); border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+.btn-save { flex: 1; background: #f1f5f9; border: 1px solid #ddd; border-radius: 8px; font-weight: 700; color: #444; cursor: pointer; }
+
+/* 6. SIDEBAR DRAWER */
 .sidebar-drawer { position: fixed !important; top: 0; left: -320px !important; width: 300px; height: 100vh; background: var(--navy) !important; z-index: 9999 !important; transition: 0.4s ease; padding: 30px 20px; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
 .sidebar-drawer.open { left: 0 !important; }
+.close-sidebar-btn { background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
+.side-link { display: block; width: 100%; padding: 18px; text-align: left; background: none; border: none; color: #94a3b8; font-weight: 700; cursor: pointer; border-bottom: 1px solid #1e293b; font-size: 1rem; }
+.side-link.active { color: var(--gold); }
 .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; }
-.menu-item { display: block; width: 100%; padding: 18px; text-align: left; background: none; border: none; color: #94a3b8; font-weight: 700; cursor: pointer; border-bottom: 1px solid #1e293b; }
-.menu-item.active { color: var(--gold); }
 
-@media (max-width: 768px) { .news-container { grid-template-columns: 1fr; } .nav-date { display: none; } .navbar { height: 70px; } .sub-nav { top: 70px; } }
+.footer-final { text-align: center; padding: 4rem; background: var(--navy); color: var(--gold); }
+
+@media (max-width: 768px) { .news-container { grid-template-columns: 1fr; } .nav-date, .nav-search-pc { display: none; } .navbar { height: 70px; } .sub-nav { top: 70px; } }
